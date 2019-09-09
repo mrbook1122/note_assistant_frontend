@@ -2,6 +2,11 @@ import React, {useState} from 'react'
 import styled, {keyframes} from "styled-components";
 
 import Right from '../../icons/next.png'
+import Tag from "./tag";
+import Note from "./note";
+import NoteBook from "./notebook";
+import Button from "./button";
+import NotebookList from "./notebooklist";
 
 //侧边栏进场动画
 const slideInLeft = keyframes`
@@ -17,13 +22,13 @@ const slideInLeft = keyframes`
 const rotateIn = keyframes`
     from {
         transform-origin: center;
-        transform: rotate3d(0, 0, 1, -200deg);
+        transform: rotate3d(0, 0, 0);
         opacity: 0;
     }
 
     to {
         transform-origin: center;
-        transform: translate3d(0, 0, 0);
+        transform: rotate3d(0, 0, 1, 180deg);
         opacity: 1;
     }
 `
@@ -45,11 +50,10 @@ const Flag = styled.div`
     background-size: cover;
     position: absolute;
     top: 50%;
-    left: ${props => props.animation ? '100%' : 0};
-    animation-name: ${props => props.animation};
-    animation-duration: 0.8s;
-    z-index: 1000;
+    left: 0;
+    z-index: 5;
     visibility: visible;
+    
 `
 
 const SiderContainer = styled.div`
@@ -57,28 +61,23 @@ const SiderContainer = styled.div`
     left: 0;
     top: 0;
     height: 100%;
-    width: 100px;
-    z-index: 10;
-    background: red;
+    width: 350px;
+    z-index: 100;
+    background: #f1f1f1;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
     visibility: hidden;
+    user-select: none;
     animation-name: ${props => props.animation};
     animation-duration: 0.8s;
     :hover {
         //animation: ${slideInLeft} 0.8s both;
         visibility: visible;
         ${Flag} {
-            left: 100%;
+            visibility: hidden;
         }
     }
+    
 `
-
-const styles = {
-    con: {
-        width: '100%',
-        height: '100%',
-        position: 'relative'
-    }
-}
 
 const Sider = () => {
     const [siderAnimation, setSiderAnimation] = useState(null)
@@ -89,8 +88,9 @@ const Sider = () => {
 
     const mouseEnter = () => {
         setHover(true)
+
         setAnimationEnd(false)
-        setFlagAnimation(rotateIn)
+        // setFlagAnimation(rotateIn)
         setSiderAnimation(slideInLeft)
         setIn(false)
     }
@@ -106,12 +106,20 @@ const Sider = () => {
 
     const onAnimationEnd = () => {
         setAnimationEnd(true)
-        setSiderAnimation(null)
-        setFlagAnimation(null)
+        // setSiderAnimation(null)
+        // setFlagAnimation(null)
+
         if (!hover && !isIn) {
+            console.log('animation')
+            setAnimationEnd(false)
             setSiderAnimation(slideOutLeft)
             setIn(true)
         }
+    }
+
+    const [notebookListVisible, setNotebookListVisible] = useState(false)
+    const clickNotebook = () => {
+        setNotebookListVisible(!notebookListVisible)
     }
 
     return (
@@ -120,8 +128,19 @@ const Sider = () => {
                             onMouseEnter={mouseEnter}
                             onMouseLeave={mouseLeave}
                             onAnimationEnd={onAnimationEnd}>
-                <div style={styles.con}>
-                    <Flag animation={flagAnimation}/>
+                <NoteBook click={clickNotebook}/>
+                <div style={{
+                    height: 'calc(100% - 90px)', width: '100%'
+                    , display: 'flex'
+                }}>
+                    <Tag/>
+                    <Note/>
+                </div>
+                <NotebookList visible={notebookListVisible}/>
+                {/*添加标签、笔记按钮*/}
+                <Button/>
+                <div>
+                    <Flag/>
                 </div>
             </SiderContainer>
         </>

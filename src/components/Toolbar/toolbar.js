@@ -4,8 +4,8 @@ import {Avatar} from "antd";
 
 const ToolBarContainer = styled.div`
     height: 100px;
-    margin: 10px 10px;
-    border: 1px solid black;
+    padding: 10px 10px;
+    //border: 1px solid black;
 `
 
 const ToolBar = () => {

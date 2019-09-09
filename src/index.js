@@ -17,13 +17,11 @@ const history = createHashHistory()
 const base_url = process.env.REACT_APP_BASE_URL
 
 const Container = styled.div`
-    display: flex;
-    flex-direction: column;
     height: 100%;
 `
 
 const App = () => {
-    const [isLogin, setIsLogin] = useState(false)
+    const [isLogin, setIsLogin] = useState(true)
 
     useEffect(() => {
         if (!isLogin) {

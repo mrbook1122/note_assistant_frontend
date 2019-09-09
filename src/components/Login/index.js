@@ -28,11 +28,15 @@ class NormalLoginForm extends React.Component {
                     name: values.username,
                     pass: values.password
                 }).then(resp => {
-                    localStorage.setItem('Token', resp.data.msg)
-                    message.success('登录成功')
-                    setTimeout(() => {
-                        history.replace('/')
-                    }, 1000)
+                    if (resp.data.code === 200) {
+                        localStorage.setItem('Token', resp.data.msg)
+                        message.success('登录成功')
+                        setTimeout(() => {
+                            history.replace('/')
+                        }, 1000)
+                    } else {
+                        message.error("用户名或密码错误")
+                    }
                 })
             }
         });

@@ -8,7 +8,7 @@ import 'braft-editor/dist/index.css'
 import axios from 'axios'
 
 const Container = styled.div`
-    flex-grow: 1;
+    height: calc(100% - 100px);
     margin: 0 10px;
 `
 
@@ -45,25 +45,25 @@ const Editor = () => {
     }
 
     useEffect(() => {
-        if (editorState === null) {
-            axios.get(base_url + '/user/note', {
-                params: {
-                    url: note_url
-                },
-                headers: {
-                    Token: token
-                }
-            }).then(resp => {
-                if (resp.data.note)
-                    setEditorState(BraftEditor.createEditorState(resp.data.note))
-            })
-        }
+        // if (editorState === null) {
+        //     axios.get(base_url + '/user/note', {
+        //         params: {
+        //             url: note_url
+        //         },
+        //         headers: {
+        //             Token: token
+        //         }
+        //     }).then(resp => {
+        //         if (resp.data.note)
+        //             setEditorState(BraftEditor.createEditorState(resp.data.note))
+        //     })
+        // }
     })
 
     return (
         <Container>
             <BraftEditor value={editorState}
-                         // style={{border: '1px solid #ccc', height: '100%'}}
+                         style={{height: '100%'}}
                          onChange={contentChange}/>
         </Container>
     )
