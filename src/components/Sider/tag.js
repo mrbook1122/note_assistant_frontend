@@ -1,5 +1,6 @@
 import React, {useEffect} from "react";
 import styled from "styled-components";
+import {connect} from 'react-redux'
 
 import TagItem from "./tagItem";
 
@@ -98,13 +99,13 @@ function Tag(props) {
         }
     })
 
+
+
     return (
         <div style={{position: 'relative'}}>
             <ContextMenu/>
             <Container>
-                <TagItem select={true}/>
-                <TagItem/>
-                <TagItem/>
+                {props.tags.map(tag => <TagItem/>)}
                 {/*<div style={{height: '1000px'}}></div>*/}
                 {/*<TagItem/>*/}
 
@@ -113,4 +114,16 @@ function Tag(props) {
     )
 }
 
-export default Tag
+const mapStateToProps = state => {
+    for (let i = 0; i < state.notes.length; i++) {
+        if (state.notes[i].notebook === state.currentNotebook)
+            return {
+                tags: state.notes[i].tags.map(tag => tag.tag)
+            }
+    }
+    return {
+        tags: []
+    }
+}
+
+export default connect(mapStateToProps)(Tag)

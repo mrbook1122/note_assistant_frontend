@@ -139,9 +139,7 @@ const Sider = () => {
                 <NotebookList visible={notebookListVisible}/>
                 {/*添加标签、笔记按钮*/}
                 <Button/>
-                <div>
-                    <Flag/>
-                </div>
+                <Flag/>
             </SiderContainer>
         </>
     )

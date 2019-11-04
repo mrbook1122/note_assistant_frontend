@@ -1,5 +1,6 @@
-import React, {useEffect} from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
+import {connect} from 'react-redux'
 
 const Container = styled.div`
     width: 100%;
@@ -21,6 +22,7 @@ const Container = styled.div`
 
 const NoteBook = props => {
 
+    const {currentNotebook} = props
     return (
         <Container onClick={props.click}>
             <div style={{marginTop: '3px'}}>
@@ -32,7 +34,7 @@ const NoteBook = props => {
                 </svg>
             </div>
             <div style={{marginLeft: '8px'}}>
-                你好a你
+                {currentNotebook}
             </div>
             <div style={{marginTop: '3px', marginLeft: '8px'}}>
                 <svg className="icon" viewBox="0 0 1024 1024"
@@ -49,4 +51,10 @@ const NoteBook = props => {
     )
 }
 
-export default NoteBook
+const mapStateToProps = state => ({
+    currentNotebook: state.notes[0].notebook
+})
+
+export default connect(
+    mapStateToProps
+)(NoteBook)

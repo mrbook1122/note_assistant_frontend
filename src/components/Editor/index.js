@@ -16,7 +16,8 @@ const base_url = process.env.REACT_APP_BASE_URL
 let token = localStorage.getItem('Token')
 let note_url = ''
 
-if (chrome.runtime.onMessage)
+if (chrome.runtime.onMessage) {
+    console.log('message')
     chrome.runtime.onMessage.addListener(
         function (request, sender, sendResponse) {
             console.log('aaaa')
@@ -25,6 +26,7 @@ if (chrome.runtime.onMessage)
             sendResponse({})
         }
     )
+}
 
 const Editor = () => {
     const [editorState, setEditorState] = useState(null)
@@ -40,7 +42,6 @@ const Editor = () => {
         // }).then(resp => {
         //     console.log(resp.data)
         // })
-        console.log(editorState.toRAW())
         setEditorState(editorState)
     }
 
