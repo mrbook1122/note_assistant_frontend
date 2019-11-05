@@ -4,19 +4,12 @@ import {Link} from "react-router-dom";
 import axios from 'axios'
 import {createHashHistory} from 'history'
 
-const base_url = process.env.REACT_APP_BASE_URL
 const history = createHashHistory()
 
 const containerStyle = {
-    display: 'flex',
-    alignItems: 'center',
     width: '300px',
     margin: '0 auto',
-    height: '100%'
-}
-
-const buttonStyle = {
-    padding: 0
+    paddingTop: '200px'
 }
 
 class NormalLoginForm extends React.Component {
@@ -24,18 +17,18 @@ class NormalLoginForm extends React.Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                axios.post(base_url + '/login', {
+                axios.post('/api/login', {
                     name: values.username,
                     pass: values.password
                 }).then(resp => {
                     if (resp.data.code === 200) {
-                        localStorage.setItem('Token', resp.data.msg)
+                        localStorage.setItem('token', resp.data.token)
                         message.success('登录成功')
                         setTimeout(() => {
                             history.replace('/')
                         }, 1000)
                     } else {
-                        message.error("用户名或密码错误")
+                        message.error(resp.data.msg)
                     }
                 })
             }
@@ -46,6 +39,7 @@ class NormalLoginForm extends React.Component {
         const {getFieldDecorator} = this.props.form;
         return (
             <div style={containerStyle}>
+                <h1 style={{textAlign: 'center'}}>Please Login</h1>
                 <Form onSubmit={this.handleSubmit} style={{flexGrow: 1}}>
                     <Form.Item>
                         {getFieldDecorator('username', {

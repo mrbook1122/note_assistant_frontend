@@ -22,9 +22,10 @@ const Container = styled.div`
 `
 
 const App = () => {
-    const [isLogin, setIsLogin] = useState(true)
-
+    //判断是否登录，默认首先假设未登录
+    const [isLogin, setIsLogin] = useState(false)
     useEffect(() => {
+        console.log('a')
         if (!isLogin) {
             let token = localStorage.getItem('Token')
 
@@ -42,7 +43,7 @@ const App = () => {
                     history.replace('/login')
                 })
         }
-    })
+    }, [isLogin])
 
     const [videoId, setVideoId] = useState(0)
     const changeVideoId = () => {
