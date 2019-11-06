@@ -34,7 +34,7 @@ const history = createHashHistory()
 const App = () => {
 
     //判断是否登录，默认先假设未登录
-    const [isLogin, setIsLogin] = useState(false)
+    const [isLogin, setIsLogin] = useState(true)
     useEffect(() => {
         if (!isLogin) {
             //判断本地是否有token

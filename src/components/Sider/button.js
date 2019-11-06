@@ -33,7 +33,7 @@ const Button = props => {
                             fill="" p-id="2704"></path>
                     </svg>
                 </div>
-                添加标签
+                添加笔记本
             </ItemContainer>
             <ItemContainer style={{width: '170px', display: 'flex'}}>
                 <div style={{margin: '8px 5px 0', lineHeight: 'normal'}}>

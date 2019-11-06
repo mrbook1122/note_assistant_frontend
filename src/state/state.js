@@ -1,8 +1,10 @@
 let state = {
-    notes: [
+    notebooks: [
         {
-            notebook: 'default', tags: [
-                {tag: 'tag', contents: []}
+            notebookName: 'default',
+            id: 1,
+            notes: [
+                {id: 1, title: 'title', content: '', updateTime: '2019'}
             ]
         }
     ],

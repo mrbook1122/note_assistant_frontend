@@ -1,3 +1,4 @@
+//表示选择笔记本，回收站，收藏的列表
 import React, {useState, useEffect} from "react";
 import styled, {keyframes} from "styled-components";
 
@@ -48,7 +49,7 @@ const AddNotebookContainer = styled.div`
     font-weight: bold;
 `
 
-const NotebookList = props => {
+const SelectList = props => {
     const [notebookAnimation, setNotebookAnimation] = useState(null)
     const notebookAnimationEnd = () => {
         setNotebookAnimation(null)
@@ -84,4 +85,4 @@ const NotebookList = props => {
     )
 }
 
-export default NotebookList
+export default SelectList

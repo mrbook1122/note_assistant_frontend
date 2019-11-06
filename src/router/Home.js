@@ -16,17 +16,25 @@ import AddTag from "../components/Sider/AddTag";
 import reducer from "../reducers";
 
 const Container = styled.div`
-    height: 100%;
     width: 100%;
     position: relative;
 `
 
 let preloadedState = {showAddTag: false};
 let state = {
-    notes: [
+    notebooks: [
         {
-            notebook: 'default', tags: [
-                {tag: 'tag', contents: []}
+            notebookName: 'default',
+            id: 1,
+            notes: [
+                {id: 1, title: 'title', content: '', updateTime: '2019'}
+            ]
+        },
+        {
+            notebookName: 'test',
+            id: 1,
+            notes: [
+                {id: 1, title: 'title', content: '', updateTime: '2019'}
             ]
         }
     ],

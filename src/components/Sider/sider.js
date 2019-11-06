@@ -2,11 +2,11 @@ import React, {useState} from 'react'
 import styled, {keyframes} from "styled-components";
 
 import Right from '../../icons/next.png'
-import Tag from "./tag";
 import Note from "./note";
-import NoteBook from "./notebook";
+import NotebookList from "./NotebookList";
 import Button from "./button";
-import NotebookList from "./notebooklist";
+import Top from "./Top";
+// import NotebookList from "./notebooklist";
 
 //侧边栏进场动画
 const slideInLeft = keyframes`
@@ -117,6 +117,7 @@ const Sider = () => {
         }
     }
 
+    //点击切换显示笔记本列表、回收站、收藏
     const [notebookListVisible, setNotebookListVisible] = useState(false)
     const clickNotebook = () => {
         setNotebookListVisible(!notebookListVisible)
@@ -128,15 +129,15 @@ const Sider = () => {
                             onMouseEnter={mouseEnter}
                             onMouseLeave={mouseLeave}
                             onAnimationEnd={onAnimationEnd}>
-                <NoteBook click={clickNotebook}/>
+                <Top/>
                 <div style={{
                     height: 'calc(100% - 90px)', width: '100%'
                     , display: 'flex'
                 }}>
-                    <Tag/>
+                    <NotebookList/>
                     <Note/>
                 </div>
-                <NotebookList visible={notebookListVisible}/>
+                {/*<NotebookList visible={notebookListVisible}/>*/}
                 {/*添加标签、笔记按钮*/}
                 <Button/>
                 <Flag/>

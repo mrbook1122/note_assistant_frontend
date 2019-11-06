@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import styled from "styled-components";
 import {connect} from 'react-redux'
 
-import TagItem from "./tagItem";
+import Notebook from "./Notebook";
 
 const Container = styled.div`
     width: 179px;
@@ -55,7 +55,7 @@ const ContextMenu = props => {
                     </svg>
                 </div>
                 <div>
-                    删除标签
+                    删除笔记本
                 </div>
             </MenuItemContainer>
             <MenuItemContainer style={{padding: '3px 18px', display: 'flex', borderBottom: '1px solid rgba(0, 0, 0, 0.05)'}}>
@@ -81,14 +81,14 @@ const ContextMenu = props => {
                     </svg>
                 </div>
                 <div>
-                    标签颜色
+                    笔记本颜色
                 </div>
             </MenuItemContainer>
         </MenuContainer>
     )
 }
 
-function Tag(props) {
+const NotebookList = props => {
 
     useEffect(() => {
         let menu = document.getElementById('menu')
@@ -105,25 +105,23 @@ function Tag(props) {
         <div style={{position: 'relative'}}>
             <ContextMenu/>
             <Container>
-                {props.tags.map(tag => <TagItem/>)}
-                {/*<div style={{height: '1000px'}}></div>*/}
-                {/*<TagItem/>*/}
+                {props.notebooks.map(notebook => {
+                    //如果是当前笔记本，则标记为select
+                    if (notebook.notebookName === props.currentNotebook) {
+                        return <Notebook select={true} notebook={notebook}/>
+                    } else {
+                        return <Notebook notebook={notebook}/>
+                    }
+                })}
 
             </Container>
         </div>
     )
 }
 
-const mapStateToProps = state => {
-    for (let i = 0; i < state.notes.length; i++) {
-        if (state.notes[i].notebook === state.currentNotebook)
-            return {
-                tags: state.notes[i].tags.map(tag => tag.tag)
-            }
-    }
-    return {
-        tags: []
-    }
-}
+const mapStateToProps = state => ({
+    notebooks: state.notebooks,
+    currentNotebook: state.currentNotebook
+})
 
-export default connect(mapStateToProps)(Tag)
+export default connect(mapStateToProps)(NotebookList)
