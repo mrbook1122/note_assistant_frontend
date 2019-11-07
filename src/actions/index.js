@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export const ADD_NOTEBOOK = 'ADD_NOTEBOOK'
 
 export const ADD_TAG = 'ADD_TAG'
@@ -42,3 +44,13 @@ export const showAddTag = () => ({
 export const closeAddTag = () => ({
     type: CLOSE_ADD_TAG
 })
+
+//获取笔记本列表
+export const fetchNotebooks = () => {
+    return function (dispatch) {
+        return axios.get('/api/notebook/list')
+            .then(resp => {
+
+            })
+    }
+}
