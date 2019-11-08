@@ -1,8 +1,9 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import {connect} from 'react-redux'
 
 import Notebook from "./Notebook";
+import {fetchNotebooks} from "../../actions";
 
 const Container = styled.div`
     width: 179px;
@@ -42,6 +43,7 @@ const MenuItemContainer = styled.div`
     }
 `
 
+//笔记本上单击右键展示的右键菜单
 const ContextMenu = props => {
     return (
         <MenuContainer id={'menu'}>
@@ -90,6 +92,7 @@ const ContextMenu = props => {
 
 const NotebookList = props => {
 
+    //全局点击之后隐藏右键菜单
     useEffect(() => {
         let menu = document.getElementById('menu')
         if (menu) {
@@ -99,18 +102,26 @@ const NotebookList = props => {
         }
     })
 
+    //初始化笔记本列表
+    const [init, setInit] = useState(false)
+    useEffect(() => {
+        if (!init) {
+            props.dispatch(fetchNotebooks())
+            setInit(true)
+        }
+    })
 
 
     return (
         <div style={{position: 'relative'}}>
             <ContextMenu/>
             <Container>
-                {props.notebooks.map(notebook => {
+                {props.notebooks.map((notebook, index) => {
                     //如果是当前笔记本，则标记为select
                     if (notebook.notebookName === props.currentNotebook) {
-                        return <Notebook select={true} notebook={notebook}/>
+                        return <Notebook select={true} notebook={notebook} key={index}/>
                     } else {
-                        return <Notebook notebook={notebook}/>
+                        return <Notebook notebook={notebook} key={index}/>
                     }
                 })}
 

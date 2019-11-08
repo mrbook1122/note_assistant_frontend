@@ -1,10 +1,9 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import styled from "styled-components";
 import {Spin} from "antd";
 import {applyMiddleware, createStore} from 'redux'
 import {Provider} from 'react-redux'
 import thunkMiddleware from 'redux-thunk'
-import axios from 'axios'
 import {createHashHistory} from 'history'
 
 import GlobalStyle from "../components/globalStyle";
@@ -20,7 +19,6 @@ const Container = styled.div`
     position: relative;
 `
 
-let preloadedState = {showAddTag: false};
 let state = {
     notebooks: [
         {
@@ -42,7 +40,7 @@ let state = {
     //是否展示添加标签的对话框
     showAddTag: false,
 }
-let store = createStore(reducer, state);
+let store = createStore(reducer, state, applyMiddleware(thunkMiddleware));
 
 //history对象
 const history = createHashHistory()

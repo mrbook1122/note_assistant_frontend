@@ -26,6 +26,7 @@ const AddTag = props => {
     const change = e => {
         setValue(e.target.value)
     }
+    console.log(props.show)
     if (!props.show)
         return null
     return (
@@ -34,7 +35,8 @@ const AddTag = props => {
                 <div>please input tag name</div>
                 <input value={value} onChange={change}/>
                 <div>
-                    <button onClick={() => props.addTag(value)}>ok</button>
+                    {/*添加笔记本*/}
+                    <button>ok</button>
                     <button onClick={props.close}>cancel</button>
                 </div>
             </Dialog>

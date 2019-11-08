@@ -23,6 +23,11 @@ const Title = styled.div`
     margin-left: 5px;
     font-size: 15px;
     line-height: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 150px;
+    text-align: left;
 `
 
 function Notebook(props) {

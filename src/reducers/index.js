@@ -1,15 +1,13 @@
-import {SHOW_ADD_TAG, CLOSE_ADD_TAG} from '../actions'
+import {combineReducers} from "redux";
 
-const reducer = (state, action) => {
+import showAddTag from "./showAddTag";
+import notebooks from "./notebook";
+import addNotebookResult from "./addNotebookResult";
 
-    switch (action.type) {
-        case SHOW_ADD_TAG:
-            return Object.assign({}, state, {showAddTag: true})
-        case CLOSE_ADD_TAG:
-            return Object.assign({}, state, {showAddTag: false})
-        default:
-            return state
-    }
-}
+const reducer = combineReducers({
+    showAddTag,
+    notebooks,
+    addNotebookResult
+})
 
 export default reducer

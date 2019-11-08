@@ -12,28 +12,11 @@ export const DELETE_TAG = 'DELETE_TAG'
 
 export const DELETE_NOTE = 'DELETE_NOTE'
 
+//笔记本已存在
+export const NOTEBOOK_IS_EXISTS = 'NOTEBOOK_IS_EXISTS'
 
-export const addTag = text => {
-    return dispatch => {
-        new Promise((resolve, reject) => {
-            let request = indexedDB.open('note', 1)
-
-            request.onsuccess = e => {
-                let db = e.target.result;
-                let transaction = db.transaction('notes', 'readwrite')
-                new Promise((resolve, reject) => {
-                    let notebookOS = transaction.objectStore('notes')
-                    let notebookRequest = notebookOS.get()
-                    notebookRequest.onsuccess = (e) => {
-                        let list = e.target.result;
-                        // 读取数据库中的数据
-                        resolve()
-                    }
-                })
-            }
-        })
-    }
-}
+//初始化笔记本列表
+export const INIT_NOTEBOOK_LIST = 'INIT_NOTEBOOK_LIST'
 
 //展示添加标签对话框
 export const SHOW_ADD_TAG = 'SHOW_ADD_TAG'
@@ -50,7 +33,31 @@ export const fetchNotebooks = () => {
     return function (dispatch) {
         return axios.get('/api/notebook/list')
             .then(resp => {
-
+                let notebooks = resp.data.map(notebook => ({
+                    id: notebook.id,
+                    notebookName: notebook.name
+                }))
+                dispatch({
+                    type: INIT_NOTEBOOK_LIST,
+                    notebooks: notebooks
+                })
             })
+    }
+}
+
+//新建一个笔记本
+export const addNotebook = notebookName => {
+
+    return (dispatch, getState) => {
+        //先判断是否已经存在同名的笔记本
+        const notebooks = getState().notebooks
+        if (notebooks.some(notebook => notebook.name === notebookName)) {
+            //如果存在，则发出一个已存在的action
+            dispatch({
+                type: NOTEBOOK_IS_EXISTS
+            })
+        } else {
+
+        }
     }
 }
