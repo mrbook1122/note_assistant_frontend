@@ -5,10 +5,17 @@ let state = {
             id: 1,
             notes: [
                 {id: 1, title: 'title', updateTime: '2019'}
-            ]
+            ],
+            //是否已经获取笔记列表
+            init: false
         }
     ],
-    currentNotebook: 'default',
+    //当前选中的笔记本
+    currentNotebook: {
+        notebookName: '',
+        id: 2,
+        notes: []
+    },
     //是否展示添加标签的对话框
     showAddTag: false,
     //添加一个笔记本时的状态：添加成功、笔记本已存在

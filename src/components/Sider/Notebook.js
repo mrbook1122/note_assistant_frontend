@@ -1,5 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import {connect} from 'react-redux'
+
+import {changeNotebook} from "../../actions";
 
 const Container = styled.button`
     width: 100%;
@@ -34,6 +37,7 @@ function Notebook(props) {
 
     const contextMenu = e => {
         e.preventDefault()
+        props.dispatch(changeNotebook(props.notebookName, props.id))
         let menu = document.getElementById('menu')
         if (menu) {
             menu.style.visibility = 'visible'
@@ -41,10 +45,14 @@ function Notebook(props) {
             menu.style.top = e.clientY - 50 + 'px'
         }
     }
+    //选中笔记本
+    const selectNotebook = () => {
+        props.dispatch(changeNotebook(props.notebookName, props.id))
+    }
 
     return (
         <>
-            <Container select={props.select} onContextMenu={contextMenu}>
+            <Container select={props.select} onContextMenu={contextMenu} onClick={selectNotebook}>
                 <svg className="icon" viewBox="0 0 1024 1024"
                      width="20" height="20">
                     <path
@@ -52,11 +60,11 @@ function Notebook(props) {
                         p-id="4466" fill="#515151"></path>
                 </svg>
                 <Title>
-                    {props.notebook.notebookName}
+                    {props.notebookName}
                 </Title>
             </Container>
         </>
     )
 }
 
-export default Notebook
+export default connect()(Notebook)

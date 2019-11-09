@@ -47,7 +47,8 @@ const MenuItemContainer = styled.div`
 const ContextMenu = props => {
     return (
         <MenuContainer id={'menu'}>
-            <MenuItemContainer style={{padding: '3px 15px', display: 'flex', borderBottom: '1px solid rgba(0, 0, 0, 0.05)'}}>
+            <MenuItemContainer
+                style={{padding: '3px 15px', display: 'flex', borderBottom: '1px solid rgba(0, 0, 0, 0.05)'}}>
                 <div style={{marginTop: '2px', marginRight: '9px'}}>
                     <svg t="1567771486370" className="icon" viewBox="0 0 1024 1024" version="1.1"
                          xmlns="http://www.w3.org/2000/svg" p-id="8227" width="22" height="22">
@@ -60,7 +61,8 @@ const ContextMenu = props => {
                     删除笔记本
                 </div>
             </MenuItemContainer>
-            <MenuItemContainer style={{padding: '3px 18px', display: 'flex', borderBottom: '1px solid rgba(0, 0, 0, 0.05)'}}>
+            <MenuItemContainer
+                style={{padding: '3px 18px', display: 'flex', borderBottom: '1px solid rgba(0, 0, 0, 0.05)'}}>
                 <div style={{marginTop: '2px', marginRight: '9px'}}>
                     <svg t="1567771707839" className="icon" viewBox="0 0 1024 1024" version="1.1"
                          xmlns="http://www.w3.org/2000/svg" p-id="9113" width="18" height="18">
@@ -118,11 +120,9 @@ const NotebookList = props => {
             <Container>
                 {props.notebooks.map((notebook, index) => {
                     //如果是当前笔记本，则标记为select
-                    if (notebook.notebookName === props.currentNotebook) {
-                        return <Notebook select={true} notebook={notebook} key={index}/>
-                    } else {
-                        return <Notebook notebook={notebook} key={index}/>
-                    }
+                    return <Notebook select={notebook.notebookName === props.currentNotebook.notebookName}
+                                     id={notebook.id}
+                                     notebookName={notebook.notebookName} key={index}/>
                 })}
 
             </Container>

@@ -11,7 +11,7 @@ import ToolBar from "../components/Toolbar/toolbar";
 import Editor from "../components/Editor/index";
 import Sider from "../components/Sider/sider";
 import VideoSider from "../components/VideoSider";
-import AddTag from "../components/Sider/AddTag";
+import AddNotebookDialog from "../components/Sider/AddNotebookDialog";
 import reducer from "../reducers";
 
 const Container = styled.div`
@@ -20,25 +20,10 @@ const Container = styled.div`
 `
 
 let state = {
-    notebooks: [
-        {
-            notebookName: 'default',
-            id: 1,
-            notes: [
-                {id: 1, title: 'title', content: '', updateTime: '2019'}
-            ]
-        },
-        {
-            notebookName: 'test',
-            id: 1,
-            notes: [
-                {id: 1, title: 'title', content: '', updateTime: '2019'}
-            ]
-        }
-    ],
-    currentNotebook: 'default',
+    notebooks: [],
+    currentNotebook: {notes: []},
     //是否展示添加标签的对话框
-    showAddTag: false,
+    showAddTag: false
 }
 let store = createStore(reducer, state, applyMiddleware(thunkMiddleware));
 
@@ -71,7 +56,8 @@ const Home = props => {
             </Container>
             <Sider/>
             <VideoSider id={videoId}/>
-            <AddTag/>
+            {/*新建笔记本对话框*/}
+            <AddNotebookDialog/>
         </Provider>
     )
 }

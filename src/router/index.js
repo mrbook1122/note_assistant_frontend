@@ -13,7 +13,7 @@ import ToolBar from "../components/Toolbar/toolbar";
 import Editor from "../components/Editor/index";
 import Sider from "../components/Sider/sider";
 import VideoSider from "../components/VideoSider";
-import AddTag from "../components/Sider/AddTag";
+import AddTag from "../components/Sider/AddNotebookDialog";
 import Home from "./Home";
 import reducer from "../reducers";
 import {HashRouter as Router} from "react-router-dom";

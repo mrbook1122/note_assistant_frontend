@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import styled, {keyframes} from "styled-components";
 
 import Right from '../../icons/next.png'
-import Note from "./note";
+import NoteList from "./NoteList";
 import NotebookList from "./NotebookList";
 import Button from "./button";
 import Top from "./Top";
@@ -135,7 +135,7 @@ const Sider = () => {
                     , display: 'flex'
                 }}>
                     <NotebookList/>
-                    <Note/>
+                    <NoteList/>
                 </div>
                 {/*<NotebookList visible={notebookListVisible}/>*/}
                 {/*添加标签、笔记按钮*/}
