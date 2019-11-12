@@ -18,7 +18,7 @@ export const updateNoteList = (notes, id) => ({
     id
 })
 
-//更改选择的笔记本
+//更改选择的笔记本     设计的不合理，更改选择的笔记本不需要笔记本名称
 export const CHANGE_NOTEBOOK = 'CHANGE_NOTEBOOK'
 export const changeNotebook = (name, id) => {
     return (dispatch, getState) => {
@@ -33,15 +33,20 @@ export const changeNotebook = (name, id) => {
                     }).then(resp => {
                         //如果没有获取过，则先更新笔记本列表中的数据
                         dispatch(updateNoteList(resp.data, id))
+                        //更改笔记本
                         dispatch({
                             type: CHANGE_NOTEBOOK,
                             notebookName: name,
                             id: id,
                             notes: resp.data
                         })
+                        //更改笔记
+                        //如果这个笔记本没有笔记，则先创建一条笔记，然后选中
+                        if (resp.data.length === 0) {
+                            //发起一个请求创建笔记本
+                        }
                     })
-                }
-                else {
+                } else {
                     dispatch({
                         type: CHANGE_NOTEBOOK,
                         notebookName: name,
@@ -54,6 +59,14 @@ export const changeNotebook = (name, id) => {
 
     }
 }
+
+//更改选中的笔记
+export const CHANGE_NOTE = 'CHANGE_NOTE'
+export const changeNote = (noteTitle, id) => ({
+    type: CHANGE_NOTE,
+    noteTitle,
+    id
+})
 
 //笔记本已存在
 export const NOTEBOOK_IS_EXISTS = 'NOTEBOOK_IS_EXISTS'
@@ -90,14 +103,15 @@ export const fetchNotebooks = () => {
             })
             .then(notebooks => {
                 //默认选择第一个笔记本
-                dispatch(changeNotebook(notebooks[0].name, notebooks[0].id))
+                if (notebooks.length > 0)
+                    dispatch(changeNotebook(notebooks[0].notebookName, notebooks[0].id))
             })
     }
 }
 
 //新建一个笔记本
 export const addNotebook = notebookName => {
-    return function(dispatch, getState) {
+    return function (dispatch, getState) {
         //先判断是否已经存在同名的笔记本
         const notebooks = getState().notebooks
         if (notebooks.some(notebook => notebook.notebookName === notebookName)) {

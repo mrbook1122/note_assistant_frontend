@@ -113,7 +113,6 @@ const NotebookList = props => {
         }
     })
 
-
     return (
         <div style={{position: 'relative'}}>
             <ContextMenu/>

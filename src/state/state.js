@@ -4,7 +4,7 @@ let state = {
             notebookName: 'default',
             id: 1,
             notes: [
-                {id: 1, title: 'title', updateTime: '2019'}
+                {id: 1, title: 'title'}
             ],
             //是否已经获取笔记列表
             init: false
@@ -15,6 +15,11 @@ let state = {
         notebookName: '',
         id: 2,
         notes: []
+    },
+    //当前选中的笔记
+    currentNote: {
+        noteTitle: '',
+        id: 1
     },
     //是否展示添加标签的对话框
     showAddTag: false,
