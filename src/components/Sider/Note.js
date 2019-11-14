@@ -1,8 +1,8 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import {connect} from 'react-redux'
 
-import {changeNotebook} from "../../actions";
+import {changeNote} from "../../actions/note";
 
 const Container = styled.button`
     width: 100%;
@@ -10,16 +10,11 @@ const Container = styled.button`
     display: flex;
     align-items: center;
     border: none;
-    background: ${props => props.select ? '#bbb' : 'transparent'};
-    
-    :hover {
-        background: #eee;
-    }
     
     :focus {
         outline: none;
-        background: #bbb;
     }
+    background: ${props => props.bgColor};
 `
 
 const Title = styled.div`
@@ -34,6 +29,21 @@ const Title = styled.div`
 `
 
 function Note(props) {
+    //设置背景颜色
+    const [bgColor, setBgColor] = useState('transparent')
+    useEffect(() => {
+        if (props.currentNote.id === props.note.id)
+            setBgColor('#bbb')
+        else setBgColor('transparent')
+    }, [props.currentNote])
+    const mouseEnter = () => {
+        if (bgColor !== '#bbb')
+            setBgColor('#eee')
+    }
+    const mouseLeave = () => {
+        if (bgColor !== '#bbb')
+            setBgColor('transparent')
+    }
 
     const contextMenu = e => {
         e.preventDefault()
@@ -47,17 +57,29 @@ function Note(props) {
     }
     //选中笔记本
     const selectNote = () => {
+        props.dispatch(changeNote(props.note.title, props.note.id))
     }
-
+    //如果标题不存在或者为空白字符，则设置标题为‘无标题页’
+    let title;
+    if (props.note.title === undefined || props.note.title.trim() === '')
+        title = '无标题页'
+    else title = props.note.title
     return (
         <>
-            <Container select={props.select} onContextMenu={contextMenu} onClick={selectNote}>
+            <Container bgColor={bgColor}
+                       onMouseEnter={mouseEnter}
+                       onMouseLeave={mouseLeave}
+                       onContextMenu={contextMenu} onClick={selectNote}>
                 <Title>
-                    {props.noteName}
+                    {title}
                 </Title>
             </Container>
         </>
     )
 }
 
-export default connect()(Note)
+const mapStateToProps = state => ({
+    currentNote: state.currentNote
+})
+
+export default connect(mapStateToProps)(Note)

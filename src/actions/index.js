@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+import {CHANGE_NOTE} from "./note";
+
 export const ADD_NOTEBOOK = 'ADD_NOTEBOOK'
 
 export const ADD_NOTE = 'ADD_NOTE'
@@ -44,29 +46,29 @@ export const changeNotebook = (name, id) => {
                         //如果这个笔记本没有笔记，则先创建一条笔记，然后选中
                         if (resp.data.length === 0) {
                             //发起一个请求创建笔记本
+                        } else {
+                            dispatch({
+                                type: CHANGE_NOTE,
+                                id: resp.data[0].id,
+                                noteTitle: resp.data[0].title
+                            })
                         }
                     })
                 } else {
+                    //直接更改笔记本
                     dispatch({
                         type: CHANGE_NOTEBOOK,
                         notebookName: name,
                         id: id,
                         notes: notebooks[i].notes
                     })
+                    //选择第一条笔记
                 }
             }
         }
 
     }
 }
-
-//更改选中的笔记
-export const CHANGE_NOTE = 'CHANGE_NOTE'
-export const changeNote = (noteTitle, id) => ({
-    type: CHANGE_NOTE,
-    noteTitle,
-    id
-})
 
 //笔记本已存在
 export const NOTEBOOK_IS_EXISTS = 'NOTEBOOK_IS_EXISTS'
@@ -102,9 +104,10 @@ export const fetchNotebooks = () => {
                 return notebooks
             })
             .then(notebooks => {
-                //默认选择第一个笔记本
-                if (notebooks.length > 0)
+                //默认选择第一个笔记本的第一条笔记
+                if (notebooks.length > 0) {
                     dispatch(changeNotebook(notebooks[0].notebookName, notebooks[0].id))
+                }
             })
     }
 }

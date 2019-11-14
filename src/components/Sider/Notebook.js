@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import {connect} from 'react-redux'
 
@@ -10,15 +10,9 @@ const Container = styled.button`
     display: flex;
     align-items: center;
     border: none;
-    background: ${props => props.select ? '#bbb' : 'transparent'};
-    
-    :hover {
-        background: #eee;
-    }
-    
+    background: ${props => props.bgColor};
     :focus {
         outline: none;
-        background: #bbb;
     }
 `
 
@@ -34,6 +28,21 @@ const Title = styled.div`
 `
 
 function Notebook(props) {
+    //设置背景颜色
+    const [bgColor, setBgColor] = useState('transparent')
+    useEffect(() => {
+        if (props.select)
+            setBgColor('#bbb')
+        else setBgColor('transparent')
+    }, [props.select])
+    const mouseEnter = () => {
+        if (bgColor !== '#bbb')
+            setBgColor('#eee')
+    }
+    const mouseLeave = () => {
+        if (bgColor !== '#bbb')
+            setBgColor('transparent')
+    }
 
     const contextMenu = e => {
         e.preventDefault()
@@ -52,7 +61,10 @@ function Notebook(props) {
 
     return (
         <>
-            <Container select={props.select} onContextMenu={contextMenu} onClick={selectNotebook}>
+            <Container bgColor={bgColor} onContextMenu={contextMenu}
+                       onMouseEnter={mouseEnter}
+                       onMouseLeave={mouseLeave}
+                       onClick={selectNotebook}>
                 <svg className="icon" viewBox="0 0 1024 1024"
                      width="20" height="20">
                     <path

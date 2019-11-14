@@ -17,12 +17,20 @@ export const addNote = (noteTitle) => {
                 type: ADD_NOTE,
                 notebookID: currentNotebook.id,
                 noteID: resp.data.id,
-                noteTitle: resp.data.title
+                noteTitle
             })
-            //更新当前选择笔记本的笔记列表
+            //更新当前选择笔记本的笔记列表，通过这种方式来更新笔记列表
             dispatch(changeNotebook(currentNotebook.notebookName, currentNotebook.id))
             //更改选择的笔记
-
+                dispatch(changeNote(noteTitle, resp.data.id))
         })
     }
 }
+
+//更改当前选择的笔记
+export const CHANGE_NOTE = 'CHANGE_NOTE'
+export const changeNote = (noteTitle, id) => ({
+    type: CHANGE_NOTE,
+    noteTitle,
+    id
+})

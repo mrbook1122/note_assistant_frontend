@@ -27,7 +27,7 @@ const NoteList = props => {
 
     return (
         <Container>
-            {props.currentNotebook.notes.map(note => <Note noteName={note.title} key={note.id}/>)}
+            {props.currentNotebook.notes.map(note => <Note key={note.id} note={note}/>)}
         </Container>
     )
 }
