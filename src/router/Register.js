@@ -48,7 +48,7 @@ const Register = props => {
             if (!err) {
                 if (values.email === undefined || values.email === '')
                     values.email = null
-                axios.post('/api/register', {
+                axios.post('/register', {
                     name: values.name,
                     phone: values.phone,
                     pass: values.pass,

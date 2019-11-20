@@ -13,18 +13,20 @@ const containerStyle = {
 }
 
 class NormalLoginForm extends React.Component {
+
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                axios.post('/api/login', {
+                axios.post('/login', {
                     name: values.username,
                     pass: values.password
                 }).then(resp => {
                     if (resp.data.code === 200) {
-                        localStorage.setItem('token', resp.data.token)
+                        localStorage.setItem('token', resp.data.msg)
                         message.success('登录成功')
                         setTimeout(() => {
+                            this.props.setLogin(true)
                             history.replace('/')
                         }, 1000)
                     } else {

@@ -48,7 +48,7 @@ function Note(props) {
     const contextMenu = e => {
         e.preventDefault()
         //props.dispatch(changeNotebook(props.notebookName, props.id))
-        let menu = document.getElementById('menu')
+        let menu = document.getElementById('note-menu')
         if (menu) {
             menu.style.visibility = 'visible'
             menu.style.left = e.clientX + 'px'

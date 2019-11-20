@@ -5,6 +5,7 @@ import styled from "styled-components";
 import BraftEditor from 'braft-editor'
 // 引入编辑器样式
 import 'braft-editor/dist/index.css'
+import {connect} from 'react-redux'
 import axios from 'axios'
 
 const Container = styled.div`
@@ -12,8 +13,6 @@ const Container = styled.div`
     margin: 0 10px;
 `
 
-const base_url = process.env.REACT_APP_BASE_URL
-let token = localStorage.getItem('Token')
 let note_url = ''
 
 if (chrome.runtime.onMessage) {
@@ -28,7 +27,7 @@ if (chrome.runtime.onMessage) {
     )
 }
 
-const Editor = () => {
+const Editor = props => {
     const [editorState, setEditorState] = useState(null)
 
     const contentChange = editorState => {
@@ -46,20 +45,17 @@ const Editor = () => {
     }
 
     useEffect(() => {
-        // if (editorState === null) {
-        //     axios.get(base_url + '/user/note', {
-        //         params: {
-        //             url: note_url
-        //         },
-        //         headers: {
-        //             Token: token
-        //         }
-        //     }).then(resp => {
-        //         if (resp.data.note)
-        //             setEditorState(BraftEditor.createEditorState(resp.data.note))
-        //     })
-        // }
-    })
+        axios.get('/note/info', {
+            headers: {
+                Token: localStorage.getItem('token')
+            },
+            params: {
+                id: props.currentNote.id
+            }
+        }).then(resp => {
+            setEditorState(BraftEditor.createEditorState(resp.data.content))
+        })
+    }, [props.currentNote])
 
     return (
         <Container>
@@ -70,4 +66,8 @@ const Editor = () => {
     )
 }
 
-export default Editor
+const mapStateToProps = state => ({
+    currentNote: state.currentNote
+})
+
+export default connect(mapStateToProps)(Editor)

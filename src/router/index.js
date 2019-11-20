@@ -34,7 +34,7 @@ const history = createHashHistory()
 const App = () => {
 
     //判断是否登录，默认先假设未登录
-    const [isLogin, setIsLogin] = useState(true)
+    const [isLogin, setIsLogin] = useState(false)
     useEffect(() => {
         if (!isLogin) {
             //判断本地是否有token
@@ -45,7 +45,7 @@ const App = () => {
                 history.replace('/login')
             } else {
                 //请求登录状态
-                axios.get('/api/login/status', {
+                axios.get('/login/status', {
                     headers: {
                         Token: token
                     }
@@ -66,7 +66,7 @@ const App = () => {
             <GlobalStyle/>
             <Router>
                 <Route path={'/'} exact render={props => <Home isLogin={isLogin}/>}/>
-                <Route path={'/login'} component={Login}/>
+                <Route path={'/login'} render={props => <Login setLogin={setIsLogin}/>}/>
                 <Route path={'/register'} component={RegisterComponent}/>
             </Router>>
         </>

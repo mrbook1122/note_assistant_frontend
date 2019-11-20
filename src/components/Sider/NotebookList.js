@@ -3,7 +3,7 @@ import styled from "styled-components";
 import {connect} from 'react-redux'
 
 import Notebook from "./Notebook";
-import {fetchNotebooks} from "../../actions";
+import {fetchNotebooks, deleteNotebook} from "../../actions";
 
 const Container = styled.div`
     width: 179px;
@@ -48,6 +48,7 @@ const ContextMenu = props => {
     return (
         <MenuContainer id={'menu'}>
             <MenuItemContainer
+                onClick={() => props.dispatch(deleteNotebook(props.currentNotebook.id))}
                 style={{padding: '3px 15px', display: 'flex', borderBottom: '1px solid rgba(0, 0, 0, 0.05)'}}>
                 <div style={{marginTop: '2px', marginRight: '9px'}}>
                     <svg t="1567771486370" className="icon" viewBox="0 0 1024 1024" version="1.1"
@@ -92,15 +93,43 @@ const ContextMenu = props => {
     )
 }
 
+//笔记右键菜单
+const NoteContextMenu = props => {
+    return (
+        <MenuContainer id={'note-menu'}>
+            <MenuItemContainer
+                style={{padding: '3px 15px', display: 'flex', borderBottom: '1px solid rgba(0, 0, 0, 0.05)'}}>
+                <div style={{marginTop: '2px', marginRight: '9px'}}>
+                    <svg t="1567771486370" className="icon" viewBox="0 0 1024 1024" version="1.1"
+                         xmlns="http://www.w3.org/2000/svg" p-id="8227" width="22" height="22">
+                        <path
+                            d="M780.8 710.4 582.4 505.6l198.4-198.4c19.2-19.2 19.2-51.2 0-70.4-19.2-19.2-51.2-19.2-70.4 0L518.4 441.6 313.6 243.2c-19.2-19.2-51.2-19.2-76.8 0-19.2 19.2-19.2 51.2 0 76.8l198.4 198.4-198.4 198.4c-19.2 19.2-19.2 51.2 0 70.4 19.2 19.2 51.2 19.2 70.4 0l198.4-198.4 198.4 198.4c19.2 19.2 51.2 19.2 76.8 0C806.4 761.6 806.4 729.6 780.8 710.4z"
+                            p-id="8228" fill="#d81e06"></path>
+                    </svg>
+                </div>
+                <div>
+                    删除笔记
+                </div>
+            </MenuItemContainer>
+        </MenuContainer>
+    )
+}
+
 const NotebookList = props => {
 
     //全局点击之后隐藏右键菜单
     useEffect(() => {
         let menu = document.getElementById('menu')
         if (menu) {
-            document.onclick = () => {
+            document.addEventListener('click', () => {
                 menu.style.visibility = 'hidden'
-            }
+            })
+        }
+        let noteMenu = document.getElementById('note-menu')
+        if (noteMenu) {
+            document.addEventListener('click', () => {
+                noteMenu.style.visibility = 'hidden'
+            })
         }
     })
 
@@ -115,7 +144,8 @@ const NotebookList = props => {
 
     return (
         <div style={{position: 'relative'}}>
-            <ContextMenu/>
+            <ContextMenu dispatch={props.dispatch} currentNotebook={props.currentNotebook}/>
+            <NoteContextMenu/>
             <Container>
                 {props.notebooks.map((notebook, index) => {
                     //如果是当前笔记本，则标记为select

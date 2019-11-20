@@ -16,7 +16,7 @@
     "redux-thunk": "^2.3.0",
     "styled-components": "^4.4.1"
   },
-  "proxy": "http://47.100.136.150:3000/mock/11",
+  "proxy": "http://localhost",
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",

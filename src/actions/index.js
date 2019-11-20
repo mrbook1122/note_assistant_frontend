@@ -1,12 +1,29 @@
 import axios from 'axios'
 
-import {CHANGE_NOTE} from "./note";
+import {CHANGE_NOTE, addNote} from "./note";
 
 export const ADD_NOTEBOOK = 'ADD_NOTEBOOK'
 
 export const ADD_NOTE = 'ADD_NOTE'
 
+//删除笔记本
 export const DELETE_NOTEBOOK = 'DELETE_NOTEBOOK'
+export const deleteNotebook = id => {
+    return (dispatch, getState) => {
+        dispatch({
+            type: DELETE_NOTEBOOK,
+            id
+        })
+        console.log(getState().notebooks)
+        //选择其他的笔记本
+        let notebooks = getState().notebooks
+        if (notebooks.length > 0) {
+            dispatch(changeNotebook(notebooks[0].notebookName, notebooks[0].id))
+        } else {
+            //如果不剩下笔记本，则新建一个默认笔记本
+        }
+    }
+}
 
 export const DELETE_NOTE = 'DELETE_NOTE'
 
@@ -25,45 +42,58 @@ export const CHANGE_NOTEBOOK = 'CHANGE_NOTEBOOK'
 export const changeNotebook = (name, id) => {
     return (dispatch, getState) => {
         let notebooks = getState().notebooks
+        let currentNotebookId = getState().currentNotebook.id
         for (let i = 0; i < notebooks.length; i++) {
             //匹配的笔记本
             if (notebooks[i].id === id) {
-                //先判断是否已经获取过了笔记列表
-                if (!notebooks[i].init) {
-                    axios.get('/api/note/list', {
-                        id: id
-                    }).then(resp => {
-                        //如果没有获取过，则先更新笔记本列表中的数据
-                        dispatch(updateNoteList(resp.data, id))
-                        //更改笔记本
-                        dispatch({
-                            type: CHANGE_NOTEBOOK,
+                new Promise(resolve => {
+                    //先判断是否已经获取过了笔记列表
+                    if (!notebooks[i].init) {
+                        axios.get('/note/list', {
+                            params: {
+                                id: id
+                            },
+                            headers: {
+                                Token: localStorage.getItem('token')
+                            }
+                        }).then(resp => {
+                            //如果没有获取过，则先更新笔记本列表中的数据
+                            dispatch(updateNoteList(resp.data, id))
+                            resolve({
+                                notebookName: name,
+                                id: id,
+                                notes: resp.data
+                            })
+                        })
+                    } else {
+                        resolve({
                             notebookName: name,
                             id: id,
-                            notes: resp.data
+                            notes: notebooks[i].notes
                         })
-                        //更改笔记
-                        //如果这个笔记本没有笔记，则先创建一条笔记，然后选中
-                        if (resp.data.length === 0) {
-                            //发起一个请求创建笔记本
-                        } else {
-                            dispatch({
-                                type: CHANGE_NOTE,
-                                id: resp.data[0].id,
-                                noteTitle: resp.data[0].title
-                            })
-                        }
-                    })
-                } else {
-                    //直接更改笔记本
+                    }
+                }).then(value => {
+                    //1. 更改笔记本
                     dispatch({
                         type: CHANGE_NOTEBOOK,
-                        notebookName: name,
-                        id: id,
-                        notes: notebooks[i].notes
+                        ...value
                     })
-                    //选择第一条笔记
-                }
+                    return value
+                }).then(value => {
+                    //判断笔记本是否为空
+                    if (value.notes.length === 0) {
+                        //创建一个笔记
+                        dispatch(addNote(''))
+                    } else {
+                        //如果还是当前笔记本，则不更改选择的笔记
+                        if (currentNotebookId !== id)
+                            dispatch({
+                                type: CHANGE_NOTE,
+                                id: value.notes[0].id,
+                                noteTitle: value.notes[0].title
+                            })
+                    }
+                })
             }
         }
 
@@ -89,7 +119,11 @@ export const closeAddTag = () => ({
 //获取笔记本列表
 export const fetchNotebooks = () => {
     return function (dispatch) {
-        axios.get('/api/notebook/list')
+        axios.get('/notebook/list', {
+            headers: {
+                Token: localStorage.getItem('token')
+            }
+        })
             .then(resp => {
                 let notebooks = resp.data.map(notebook => ({
                     id: notebook.id,
@@ -132,8 +166,12 @@ export const addNotebook = notebookName => {
         } else {
             //关闭对话框
             dispatch(closeAddTag())
-            axios.post('/api/notebook/add', {
+            axios.post('/notebook/add', {
                 name: notebookName
+            }, {
+                headers: {
+                    Token: localStorage.getItem('token')
+                }
             }).then(resp => {
                 dispatch({
                     type: ADD_NOTEBOOK,

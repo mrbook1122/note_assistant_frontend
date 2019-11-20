@@ -1,7 +1,7 @@
 import {combineReducers} from "redux";
 
 import showAddTag from "./showAddTag";
-import notebooks from "./notebook";
+import notebooks from "./notebooks";
 import addNotebookResult from "./addNotebookResult";
 import currentNotebook from "./currentNotebook";
 import currentNote from "./currentNote";
