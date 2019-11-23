@@ -6,7 +6,7 @@ const notebooks = (state = [], action) => {
         case INIT_NOTEBOOK_LIST:
             return action.notebooks
         case ADD_NOTEBOOK:
-            return [...state, {id: 2, notebookName: action.notebookName}]
+            return [...state, {id: action.id, notebookName: action.notebookName}]
         //初始化一个笔记本的笔记列表
         case UPDATE_NOTE_LIST:
             return state.map(notebook => {

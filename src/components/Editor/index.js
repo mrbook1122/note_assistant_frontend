@@ -50,7 +50,7 @@ const Editor = props => {
                 Token: localStorage.getItem('token')
             },
             params: {
-                id: props.currentNote.id
+                id: 1
             }
         }).then(resp => {
             setEditorState(BraftEditor.createEditorState(resp.data.content))

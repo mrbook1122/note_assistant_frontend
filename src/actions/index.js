@@ -173,9 +173,11 @@ export const addNotebook = notebookName => {
                     Token: localStorage.getItem('token')
                 }
             }).then(resp => {
+                //发起一个添加笔记本的action
                 dispatch({
                     type: ADD_NOTEBOOK,
-                    notebookName
+                    notebookName,
+                    id: resp.data.id
                 })
             })
         }

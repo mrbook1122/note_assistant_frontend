@@ -56,5 +56,13 @@ export const updateNoteTitle = (noteId, noteTitle) => {
         dispatch(changeNotebook(notebookName, notebookId))
         //更新当前的笔记
         dispatch(changeNote(noteTitle, noteId))
+        axios.post('/note/update', {
+            id: noteId,
+            title: noteTitle
+        }, {
+            headers: {
+                Token: localStorage.getItem('token')
+            }
+        })
     }
 }
