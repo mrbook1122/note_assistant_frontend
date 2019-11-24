@@ -48,7 +48,7 @@ const ContextMenu = props => {
     return (
         <MenuContainer id={'menu'}>
             <MenuItemContainer
-                onClick={() => props.dispatch(deleteNotebook(props.currentNotebook.id))}
+                onClick={props.deleteNotebook}
                 style={{padding: '3px 15px', display: 'flex', borderBottom: '1px solid rgba(0, 0, 0, 0.05)'}}>
                 <div style={{marginTop: '2px', marginRight: '9px'}}>
                     <svg t="1567771486370" className="icon" viewBox="0 0 1024 1024" version="1.1"
@@ -142,16 +142,23 @@ const NotebookList = props => {
         }
     })
 
+    /**
+     * 删除一个笔记本
+     */
+    const deleteNotebook = () => {
+        props.dispatch()
+    }
+
     return (
         <div style={{position: 'relative'}}>
-            <ContextMenu dispatch={props.dispatch} currentNotebook={props.currentNotebook}/>
+            <ContextMenu dispatch={props.dispatch} deleteNotebook={deleteNotebook}/>
             <NoteContextMenu/>
             <Container>
                 {props.notebooks.map((notebook, index) => {
                     //如果是当前笔记本，则标记为select
-                    return <Notebook select={notebook.notebookName === props.currentNotebook.notebookName}
-                                     id={notebook.id}
-                                     notebookName={notebook.notebookName} key={index}/>
+                    return <Notebook select={notebook.select}
+                                     id={notebook.notebookId}
+                                     notebookName={notebook.name} key={index}/>
                 })}
 
             </Container>
@@ -160,8 +167,7 @@ const NotebookList = props => {
 }
 
 const mapStateToProps = state => ({
-    notebooks: state.notebooks,
-    currentNotebook: state.currentNotebook
+    notebooks: state.notebooks
 })
 
 export default connect(mapStateToProps)(NotebookList)

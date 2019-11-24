@@ -39,7 +39,6 @@ const App = () => {
         if (!isLogin) {
             //判断本地是否有token
             let token = localStorage.getItem('token')
-            console.log(token)
             //token为null，直接跳转登录页面
             if (token === null) {
                 history.replace('/login')
@@ -50,7 +49,6 @@ const App = () => {
                         Token: token
                     }
                 }).then(resp => {
-                    console.log(resp.data)
                     if (resp.data.code !== 200)
                         history.replace('/login')
                     else setIsLogin(true)

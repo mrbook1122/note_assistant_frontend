@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import {connect} from 'react-redux'
 
-import {changeNote} from "../../actions/note";
+import {changeNote} from "../../actions";
 
 const Container = styled.button`
     width: 100%;
@@ -32,10 +32,10 @@ function Note(props) {
     //设置背景颜色
     const [bgColor, setBgColor] = useState('transparent')
     useEffect(() => {
-        if (props.currentNote.id === props.note.id)
+        if (props.note.select)
             setBgColor('#bbb')
         else setBgColor('transparent')
-    }, [props.currentNote])
+    }, [props.note])
     const mouseEnter = () => {
         if (bgColor !== '#bbb')
             setBgColor('#eee')
@@ -47,7 +47,7 @@ function Note(props) {
 
     const contextMenu = e => {
         e.preventDefault()
-        //props.dispatch(changeNotebook(props.notebookName, props.id))
+        selectNote()
         let menu = document.getElementById('note-menu')
         if (menu) {
             menu.style.visibility = 'visible'
@@ -57,7 +57,7 @@ function Note(props) {
     }
     //选中笔记本
     const selectNote = () => {
-        props.dispatch(changeNote(props.note.title, props.note.id))
+        props.dispatch(changeNote(props.note.noteId))
     }
     //如果标题不存在或者为空白字符，则设置标题为‘无标题页’
     let title;
@@ -78,8 +78,4 @@ function Note(props) {
     )
 }
 
-const mapStateToProps = state => ({
-    currentNote: state.currentNote
-})
-
-export default connect(mapStateToProps)(Note)
+export default connect()(Note)

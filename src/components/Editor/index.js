@@ -45,17 +45,26 @@ const Editor = props => {
     }
 
     useEffect(() => {
-        axios.get('/note/info', {
-            headers: {
-                Token: localStorage.getItem('token')
-            },
-            params: {
-                id: 1
-            }
-        }).then(resp => {
-            setEditorState(BraftEditor.createEditorState(resp.data.content))
-        })
-    }, [props.currentNote])
+        console.log(props.note)
+        if (props.note && props.note.status === 1) {
+            axios.get('/note/info', {
+                headers: {
+                    Token: localStorage.getItem('token')
+                },
+                params: {
+                    id: props.note.noteId
+                }
+            }).then(resp => {
+                if (resp.data.code === 200) {
+                    setEditorState(BraftEditor.createEditorState(resp.data.note.content))
+                }
+            })
+        }
+    }, [props.note])
+
+    //未选中笔记本
+    if (props.note && props.note.noteId === -1)
+        return null
 
     return (
         <Container>
@@ -66,8 +75,13 @@ const Editor = props => {
     )
 }
 
-const mapStateToProps = state => ({
-    currentNote: state.currentNote
-})
+const mapStateToProps = state => {
+    let notebook = state.notebooks.find(notebook => notebook.select)
+    if (notebook === undefined)
+    //返回id:-1表示未选择笔记本
+        return {note: {noteId: -1}}
+    let note = notebook.notes.find(note => note.select)
+    return {note}
+}
 
 export default connect(mapStateToProps)(Editor)

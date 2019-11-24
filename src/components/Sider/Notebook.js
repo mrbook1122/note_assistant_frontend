@@ -46,7 +46,7 @@ function Notebook(props) {
 
     const contextMenu = e => {
         e.preventDefault()
-        props.dispatch(changeNotebook(props.notebookName, props.id))
+        props.dispatch(changeNotebook(props.id))
         let menu = document.getElementById('menu')
         if (menu) {
             menu.style.visibility = 'visible'
@@ -56,7 +56,7 @@ function Notebook(props) {
     }
     //选中笔记本
     const selectNotebook = () => {
-        props.dispatch(changeNotebook(props.notebookName, props.id))
+        props.dispatch(changeNotebook(props.id))
     }
 
     return (

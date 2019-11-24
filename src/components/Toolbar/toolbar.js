@@ -38,14 +38,17 @@ const ToolBar = props => {
     //         setVideoSiderVisible(!videoSiderVisible)
     //     }
     // }
-
     const input = useRef(null)
     useEffect(() => {
-        input.current.value = props.currentNote.noteTitle
-    }, [props.currentNote])
+        if (props.note && props.note.noteId !== -1)
+            input.current.value = props.note.title
+    }, [props.note])
     const onChange = e => {
+        // props.dispatch(updateNoteTitle(props.currentNote.id, e.target.value))
+    }
 
-        props.dispatch(updateNoteTitle(props.currentNote.id, e.target.value))
+    if (props.note && props.note.noteId === -1) {
+        return (<div>添加一个笔记本开始记笔记</div>)
     }
 
     return (
@@ -73,8 +76,13 @@ const ToolBar = props => {
     )
 }
 
-const mapStateToProps = state => ({
-    currentNote: state.currentNote
-})
+const mapStateToProps = state => {
+    let notebook = state.notebooks.find(notebook => notebook.select)
+    if (notebook === undefined)
+    //返回id:-1表示未选择笔记本
+        return {note: {noteId: -1}}
+    let note = notebook.notes.find(note => note.select)
+    return {note}
+}
 
 export default connect(mapStateToProps)(ToolBar)

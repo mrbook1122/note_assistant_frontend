@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import {CHANGE_NOTE, addNote} from "./note";
+import {addNote} from "./note";
 
 export const ADD_NOTEBOOK = 'ADD_NOTEBOOK'
 
@@ -8,24 +8,20 @@ export const ADD_NOTE = 'ADD_NOTE'
 
 //删除笔记本
 export const DELETE_NOTEBOOK = 'DELETE_NOTEBOOK'
-export const deleteNotebook = id => {
+export const deleteNotebook = () => {
     return (dispatch, getState) => {
+        //删除笔记本
         dispatch({
-            type: DELETE_NOTEBOOK,
-            id
+            type: DELETE_NOTEBOOK
         })
-        console.log(getState().notebooks)
         //选择其他的笔记本
         let notebooks = getState().notebooks
         if (notebooks.length > 0) {
-            dispatch(changeNotebook(notebooks[0].notebookName, notebooks[0].id))
-        } else {
-            //如果不剩下笔记本，则新建一个默认笔记本
+            dispatch(changeNotebook(notebooks[notebooks.length - 1].notebookId))
         }
+        //Ajax
     }
 }
-
-export const DELETE_NOTE = 'DELETE_NOTE'
 
 export const UPDATE_NOTE_LIST = 'UPDATE_NOTE_LIST'
 
@@ -37,68 +33,12 @@ export const updateNoteList = (notes, id) => ({
     id
 })
 
-//更改选择的笔记本     设计的不合理，更改选择的笔记本不需要笔记本名称
+//更改选择的笔记本
 export const CHANGE_NOTEBOOK = 'CHANGE_NOTEBOOK'
-export const changeNotebook = (name, id) => {
-    return (dispatch, getState) => {
-        let notebooks = getState().notebooks
-        let currentNotebookId = getState().currentNotebook.id
-        for (let i = 0; i < notebooks.length; i++) {
-            //匹配的笔记本
-            if (notebooks[i].id === id) {
-                new Promise(resolve => {
-                    //先判断是否已经获取过了笔记列表
-                    if (!notebooks[i].init) {
-                        axios.get('/note/list', {
-                            params: {
-                                id: id
-                            },
-                            headers: {
-                                Token: localStorage.getItem('token')
-                            }
-                        }).then(resp => {
-                            //如果没有获取过，则先更新笔记本列表中的数据
-                            dispatch(updateNoteList(resp.data, id))
-                            resolve({
-                                notebookName: name,
-                                id: id,
-                                notes: resp.data
-                            })
-                        })
-                    } else {
-                        resolve({
-                            notebookName: name,
-                            id: id,
-                            notes: notebooks[i].notes
-                        })
-                    }
-                }).then(value => {
-                    //1. 更改笔记本
-                    dispatch({
-                        type: CHANGE_NOTEBOOK,
-                        ...value
-                    })
-                    return value
-                }).then(value => {
-                    //判断笔记本是否为空
-                    if (value.notes.length === 0) {
-                        //创建一个笔记
-                        dispatch(addNote(''))
-                    } else {
-                        //如果还是当前笔记本，则不更改选择的笔记
-                        if (currentNotebookId !== id)
-                            dispatch({
-                                type: CHANGE_NOTE,
-                                id: value.notes[0].id,
-                                noteTitle: value.notes[0].title
-                            })
-                    }
-                })
-            }
-        }
-
-    }
-}
+export const changeNotebook = notebookId => ({
+    type: CHANGE_NOTEBOOK,
+    notebookId
+})
 
 //笔记本已存在
 export const NOTEBOOK_IS_EXISTS = 'NOTEBOOK_IS_EXISTS'
@@ -123,35 +63,74 @@ export const fetchNotebooks = () => {
             headers: {
                 Token: localStorage.getItem('token')
             }
-        })
-            .then(resp => {
-                let notebooks = resp.data.map(notebook => ({
-                    id: notebook.id,
-                    notebookName: notebook.name,
-                    init: false,
-                    notes: []
+        }).then(resp => {
+            if (resp.data.code === 200 && resp.data.notebooks) {
+                let notebooks = resp.data.notebooks.map(notebook => ({
+                    notebookId: notebook.id,
+                    name: notebook.name,
+                    status: 0,
+                    notes: [],
+                    select: false
                 }))
                 dispatch({
                     type: INIT_NOTEBOOK_LIST,
-                    notebooks: notebooks
+                    notebooks
                 })
-                return notebooks
-            })
-            .then(notebooks => {
-                //默认选择第一个笔记本的第一条笔记
+                //选中一个笔记本
                 if (notebooks.length > 0) {
-                    dispatch(changeNotebook(notebooks[0].notebookName, notebooks[0].id))
+                    dispatch(changeNotebook(notebooks[0].notebookId))
                 }
-            })
+            }
+        })
+    }
+}
+
+//更改当前选择的笔记
+export const CHANGE_NOTE = 'CHANGE_NOTE'
+export const changeNote = noteId => ({
+    type: CHANGE_NOTE,
+    noteId
+})
+
+/**
+ * 初始化笔记本的笔记列表
+ */
+export const FETCH_NOTE_LIST = 'FETCH_NOTE_LIST'
+export const fetchNotes = () => {
+    return function (dispatch, getState) {
+        //当前的笔记本
+        let notebook = getState().notebooks.find(notebook => notebook.select)
+        axios.get('/note/list', {
+            headers: {
+                Token: localStorage.getItem('token')
+            },
+            params: {
+                id: notebook.notebookId
+            }
+        }).then(resp => {
+            if (resp.data.code === 200) {
+                dispatch({
+                    type: FETCH_NOTE_LIST,
+                    notes: resp.data.notes
+                })
+                //选中一条笔记
+                if (resp.data.notes.length > 0) {
+                    dispatch(changeNote(resp.data.notes[0].id))
+                } else {
+                    //如果笔记本为空，则新建一条笔记
+                    dispatch(addNote())
+                }
+            }
+        })
     }
 }
 
 //新建一个笔记本
-export const addNotebook = notebookName => {
+export const addNotebook = name => {
     return function (dispatch, getState) {
         //先判断是否已经存在同名的笔记本
         const notebooks = getState().notebooks
-        if (notebooks.some(notebook => notebook.notebookName === notebookName)) {
+        if (notebooks.some(notebook => notebook.name === name)) {
             //如果存在，则发出一个已存在的action
             dispatch({
                 type: NOTEBOOK_IS_EXISTS,
@@ -167,18 +146,20 @@ export const addNotebook = notebookName => {
             //关闭对话框
             dispatch(closeAddTag())
             axios.post('/notebook/add', {
-                name: notebookName
+                name: name
             }, {
                 headers: {
                     Token: localStorage.getItem('token')
                 }
             }).then(resp => {
-                //发起一个添加笔记本的action
-                dispatch({
-                    type: ADD_NOTEBOOK,
-                    notebookName,
-                    id: resp.data.id
-                })
+                if (resp.data.code === 200) {
+                    //发起一个添加笔记本的action
+                    dispatch({
+                        type: ADD_NOTEBOOK,
+                        name,
+                        notebookId: resp.data.notebook.id
+                    })
+                }
             })
         }
     }

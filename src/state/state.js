@@ -1,26 +1,24 @@
 let state = {
     notebooks: [
         {
-            notebookName: 'default',
-            id: 1,
+            name: 'default',
+            notebookId: 1,
             notes: [
-                {id: 1, title: 'title'}
+                /**
+                 * 笔记的状态，0表示这条笔记是本地新建的，此时id为undefined
+                 */
+                {noteId: 1, title: 'title', status: 0, select: false}
             ],
-            //是否已经获取笔记列表
-            init: false
+            /**
+             * 笔记本中笔记列表的状态，0表示未获取笔记列表
+             */
+            status: 0,
+            /**
+             * 是否选中
+             */
+            select: false
         }
     ],
-    //当前选中的笔记本
-    currentNotebook: {
-        notebookName: '',
-        id: 2,
-        notes: []
-    },
-    //当前选中的笔记
-    currentNote: {
-        noteTitle: '',
-        id: 1
-    },
     //是否展示添加标签的对话框
     showAddTag: false,
     //添加一个笔记本时的状态：添加成功、笔记本已存在

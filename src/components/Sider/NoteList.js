@@ -3,6 +3,7 @@ import styled from "styled-components";
 import {connect} from 'react-redux'
 
 import Note from "./Note";
+import {fetchNotes} from "../../actions";
 
 const Container = styled.div`
     width: 170px;
@@ -24,16 +25,25 @@ const Container = styled.div`
 `
 
 const NoteList = props => {
+    useEffect(() => {
+        //判断笔记本的笔记列表是否已经初始化
+        if (props.notebook && props.notebook.status === 0) {
+            props.dispatch(fetchNotes())
+        }
+    }, [props.notebook])
 
+    //如果未有选中的笔记本，则返回null
+    if (props.notebook === undefined)
+        return null
     return (
         <Container>
-            {props.currentNotebook.notes.map(note => <Note key={note.id} note={note}/>)}
+            {props.notebook.notes.map((note, index) => <Note key={index} note={note}/>)}
         </Container>
     )
 }
 
 const mapStateToProps = state => ({
-    currentNotebook: state.currentNotebook
+    notebook: state.notebooks.find(notebook => notebook.select)
 })
 
 export default connect(mapStateToProps)(NoteList)

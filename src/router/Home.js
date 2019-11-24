@@ -21,7 +21,6 @@ const Container = styled.div`
 
 let state = {
     notebooks: [],
-    currentNotebook: {notes: []},
     //是否展示添加标签的对话框
     showAddTag: false
 }
