@@ -2,6 +2,7 @@
 import React, {useEffect, useRef, useState} from 'react'
 import styled from "styled-components";
 import {connect} from 'react-redux'
+import axios from 'axios'
 
 import {updateNoteTitle} from "../../actions/note";
 
@@ -38,13 +39,41 @@ const ToolBar = props => {
     //         setVideoSiderVisible(!videoSiderVisible)
     //     }
     // }
+
+    /**
+     * 标题输入框赋值
+     **/
     const input = useRef(null)
     useEffect(() => {
         if (props.note && props.note.noteId !== -1)
             input.current.value = props.note.title
     }, [props.note])
+
+
+    /**
+     * 设置一个定时器，在一段时间之后更新标题
+     **/
+    const [timeoutId, setTimeoutId] = useState(0)
     const onChange = e => {
-        // props.dispatch(updateNoteTitle(props.currentNote.id, e.target.value))
+        clearTimeout(timeoutId)
+        let title = e.target.value
+        let id = setTimeout(() => {
+            if (props.note.status === 1) {
+                //更新标题
+                axios.post('/note/update/title', {
+                    title,
+                    id: props.note.noteId
+                }, {
+                    headers: {
+                        Token: localStorage.getItem('token')
+                    }
+                }).then(resp => {
+                    if (resp.data.code === 200)
+                        props.dispatch(updateNoteTitle(title))
+                })
+            }
+        }, 1500)
+        setTimeoutId(id)
     }
 
     if (props.note && props.note.noteId === -1) {

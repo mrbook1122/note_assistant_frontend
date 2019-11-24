@@ -7,6 +7,7 @@ import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/index.css'
 import {connect} from 'react-redux'
 import axios from 'axios'
+import {updateNoteTitle} from "../../actions/note";
 
 const Container = styled.div`
     height: calc(100% - 100px);
@@ -30,22 +31,26 @@ if (chrome.runtime.onMessage) {
 const Editor = props => {
     const [editorState, setEditorState] = useState(null)
 
+    const [timeoutId, setTimeoutId] = useState(0)
     const contentChange = editorState => {
-        // axios.post(base_url + '/user/note', {
-        //     url: note_url,
-        //     note: editorState.toRAW()
-        // }, {
-        //     headers: {
-        //         Token: token
-        //     }
-        // }).then(resp => {
-        //     console.log(resp.data)
-        // })
+        clearTimeout(timeoutId)
+        let id = setTimeout(() => {
+            if (props.note.status === 1) {
+                axios.post('/note/update/content', {
+                    content: editorState.toRAW(),
+                    id: props.note.noteId
+                }, {
+                    headers: {
+                        Token: localStorage.getItem('token')
+                    }
+                })
+            }
+        }, 3000)
+        setTimeoutId(id)
         setEditorState(editorState)
     }
 
     useEffect(() => {
-        console.log(props.note)
         if (props.note && props.note.status === 1) {
             axios.get('/note/info', {
                 headers: {

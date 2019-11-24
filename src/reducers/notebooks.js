@@ -32,19 +32,7 @@ const notebooks = (state = [], action) => {
             })
         //更新笔记标题
         case UPDATE_NOTE_TITLE:
-            return state.map(notebook => {
-                if (notebook.id === action.notebookId) {
-                    let notes = notebook.notes.map(note => {
-                        if (note.id === action.noteId) {
-                            return {
-                                id: note.id,
-                                title: action.noteTitle
-                            }
-                        } else return note;
-                    })
-                    return {...notebook, notes: notes}
-                } else return notebook
-            })
+            return action.notebooks
         //删除笔记本
         case DELETE_NOTEBOOK:
             return state.filter(notebook => notebook.select)

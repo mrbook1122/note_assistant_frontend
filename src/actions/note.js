@@ -4,36 +4,53 @@ import {changeNotebook} from "./index";
 
 //新建一条笔记，state中只保存笔记的id和title
 export const ADD_NOTE = 'ADD_NOTE'
-export const addNote = () => ({
-    type: ADD_NOTE
-})
-
-
-
-//更新笔记的标题，首页需要更新notebooks中，然后更新选择的笔记本，然后更新当前笔记本
-export const UPDATE_NOTE_TITLE = 'UPDATE_NOTE_TITLE'
-export const updateNoteTitle = (noteId, noteTitle) => {
+export const addNote = () => {
     return (dispatch, getState) => {
-        // let notebookId = getState().currentNotebook.id
-        // let notebookName = getState().currentNotebook.notebookName
-        // //更新notebooks
-        // dispatch({
-        //     type: UPDATE_NOTE_TITLE,
-        //     notebookId,
-        //     noteId,
-        //     noteTitle
-        // })
-        // //更新选择的笔记本
-        // dispatch(changeNotebook(notebookName, notebookId))
-        // //更新当前的笔记
-        // dispatch(changeNote(noteTitle, noteId))
-        // axios.post('/note/update', {
-        //     id: noteId,
-        //     title: noteTitle
-        // }, {
-        //     headers: {
-        //         Token: localStorage.getItem('token')
-        //     }
-        // })
+        dispatch({
+            type: ADD_NOTE
+        })
+        let notebook = getState().notebooks.find(notebook => notebook.select)
+        //新建一条笔记
+        axios.post('/note/add', {
+            title: '',
+            notebookID: notebook.notebookId
+        }, {
+            headers: {
+                Token: localStorage.getItem('token')
+            }
+        }).then(resp => {
+            if (resp.data.code === 200)
+                dispatch(updateNoteTitle('', resp.data.note.id))
+        })
+    }
+}
+
+
+/**
+ * 更新笔记的标题，
+ * 如果传入id，则表明这篇笔记是新建的
+ */
+export const UPDATE_NOTE_TITLE = 'UPDATE_NOTE_TITLE'
+export const updateNoteTitle = (title, noteId) => {
+    return (dispatch, getState) => {
+        let notebooks = getState().notebooks.map(notebook => {
+            if (notebook.select) {
+                let notes = notebook.notes.map(note => {
+                    if (note.select) {
+                        if (note.status === 0) {
+                            return {noteId, title, status: 1, select: true}
+                        }
+                        return {...note, title}
+                    }
+                    return note
+                })
+                return {...notebook, notes}
+            }
+            return notebook
+        })
+        dispatch({
+            type: UPDATE_NOTE_TITLE,
+            notebooks
+        })
     }
 }
