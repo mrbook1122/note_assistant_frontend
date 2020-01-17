@@ -14,6 +14,9 @@ const Container = styled.div`
     padding-top: 200px;
 `
 
+/**
+ * 注册页面
+ */
 const Register = props => {
 
     const {getFieldDecorator} = props.form
@@ -48,7 +51,7 @@ const Register = props => {
             if (!err) {
                 if (values.email === undefined || values.email === '')
                     values.email = null
-                axios.post('/register', {
+                axios.post('/api/register', {
                     name: values.name,
                     phone: values.phone,
                     pass: values.pass,

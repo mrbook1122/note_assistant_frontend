@@ -14,6 +14,7 @@ const Container = styled.div`
     margin: 0 10px;
 `
 
+// 笔记对应的url
 let note_url = ''
 
 if (chrome.runtime.onMessage) {
@@ -31,14 +32,17 @@ if (chrome.runtime.onMessage) {
 const Editor = props => {
     const [editorState, setEditorState] = useState(null)
 
+    /**
+     * 在编辑笔记内容时，每隔3秒同步一次笔记内容，
+     *
+     */
     const [timeoutId, setTimeoutId] = useState(0)
     const contentChange = editorState => {
         clearTimeout(timeoutId)
         let id = setTimeout(() => {
             if (props.note.status === 1) {
-                axios.post('/note/update/content', {
-                    content: editorState.toRAW(),
-                    id: props.note.noteId
+                axios.post('/api/note/' + props.note.noteId + '/content', {
+                    content: editorState.toRAW()
                 }, {
                     headers: {
                         Token: localStorage.getItem('token')
@@ -50,24 +54,22 @@ const Editor = props => {
         setEditorState(editorState)
     }
 
+    /**
+     * 获取笔记详细信息
+     */
     useEffect(() => {
         if (props.note && props.note.status === 1) {
-            axios.get('/note/info', {
+            axios.get('/api/note/' + props.note.noteId, {
                 headers: {
                     Token: localStorage.getItem('token')
-                },
-                params: {
-                    id: props.note.noteId
                 }
             }).then(resp => {
-                if (resp.data.code === 200) {
-                    setEditorState(BraftEditor.createEditorState(resp.data.note.content))
-                }
+                setEditorState(BraftEditor.createEditorState(resp.data.content))
             })
         }
     }, [props.note])
 
-    //未选中笔记本
+    //如果当前未选中笔记本
     if (props.note && props.note.noteId === -1)
         return null
 
@@ -83,7 +85,7 @@ const Editor = props => {
 const mapStateToProps = state => {
     let notebook = state.notebooks.find(notebook => notebook.select)
     if (notebook === undefined)
-    //返回id:-1表示未选择笔记本
+        //返回id:-1表示未选择笔记本
         return {note: {noteId: -1}}
     let note = notebook.notes.find(note => note.select)
     return {note}

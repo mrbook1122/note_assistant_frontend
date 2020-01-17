@@ -12,13 +12,16 @@ const containerStyle = {
     paddingTop: '200px'
 }
 
+/**
+ * 登录表单
+ */
 class NormalLoginForm extends React.Component {
 
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                axios.post('/login', {
+                axios.post('/api/login', {
                     name: values.username,
                     pass: values.password
                 }).then(resp => {

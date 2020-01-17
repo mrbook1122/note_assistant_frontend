@@ -35,7 +35,7 @@ const notebooks = (state = [], action) => {
             return action.notebooks
         //删除笔记本
         case DELETE_NOTEBOOK:
-            return state.filter(notebook => notebook.select)
+            return state.filter(notebook => !notebook.select)
         case CHANGE_NOTEBOOK:
             return state.map(notebook => {
                 if (action.notebookId === notebook.notebookId) {

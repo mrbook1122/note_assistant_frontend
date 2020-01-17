@@ -34,7 +34,7 @@ const NoteList = props => {
 
     //如果未有选中的笔记本，则返回null
     if (props.notebook === undefined)
-        return null
+        return <Container/>
     return (
         <Container>
             {props.notebook.notes.map((note, index) => <Note key={index} note={note}/>)}

@@ -44,7 +44,7 @@ const App = () => {
                 history.replace('/login')
             } else {
                 //请求登录状态
-                axios.get('/login/status', {
+                axios.get('/api/login/status', {
                     headers: {
                         Token: token
                     }

@@ -10,16 +10,22 @@ export const ADD_NOTE = 'ADD_NOTE'
 export const DELETE_NOTEBOOK = 'DELETE_NOTEBOOK'
 export const deleteNotebook = () => {
     return (dispatch, getState) => {
+        let notebooks = getState().notebooks
+        // 获取当前笔记本
+        let currentNotebook = notebooks.find(notebook => notebook.select)
         //删除笔记本
         dispatch({
             type: DELETE_NOTEBOOK
         })
         //选择其他的笔记本
-        let notebooks = getState().notebooks
         if (notebooks.length > 0) {
             dispatch(changeNotebook(notebooks[notebooks.length - 1].notebookId))
         }
-        //Ajax
+        axios.delete('/api/notebook/' + currentNotebook.notebookId, {
+            headers: {
+                Token: localStorage.getItem('token')
+            }
+        })
     }
 }
 
@@ -59,27 +65,25 @@ export const closeAddTag = () => ({
 //获取笔记本列表
 export const fetchNotebooks = () => {
     return function (dispatch) {
-        axios.get('/notebook/list', {
+        axios.get('/api/notebook/list', {
             headers: {
                 Token: localStorage.getItem('token')
             }
         }).then(resp => {
-            if (resp.data.code === 200 && resp.data.notebooks) {
-                let notebooks = resp.data.notebooks.map(notebook => ({
-                    notebookId: notebook.id,
-                    name: notebook.name,
-                    status: 0,
-                    notes: [],
-                    select: false
-                }))
-                dispatch({
-                    type: INIT_NOTEBOOK_LIST,
-                    notebooks
-                })
-                //选中一个笔记本
-                if (notebooks.length > 0) {
-                    dispatch(changeNotebook(notebooks[0].notebookId))
-                }
+            let notebooks = resp.data.map(notebook => ({
+                notebookId: notebook.id,
+                name: notebook.name,
+                status: 0,
+                notes: [],
+                select: false
+            }))
+            dispatch({
+                type: INIT_NOTEBOOK_LIST,
+                notebooks
+            })
+            //选中一个笔记本
+            if (notebooks.length > 0) {
+                dispatch(changeNotebook(notebooks[0].notebookId))
             }
         })
     }
@@ -100,26 +104,21 @@ export const fetchNotes = () => {
     return function (dispatch, getState) {
         //当前的笔记本
         let notebook = getState().notebooks.find(notebook => notebook.select)
-        axios.get('/note/list', {
+        axios.get('/api/notebook/' + notebook.notebookId + '/note/list', {
             headers: {
                 Token: localStorage.getItem('token')
-            },
-            params: {
-                id: notebook.notebookId
             }
         }).then(resp => {
-            if (resp.data.code === 200) {
-                dispatch({
-                    type: FETCH_NOTE_LIST,
-                    notes: resp.data.notes
-                })
-                //选中一条笔记
-                if (resp.data.notes.length > 0) {
-                    dispatch(changeNote(resp.data.notes[0].id))
-                } else {
-                    //如果笔记本为空，则新建一条笔记
-                    dispatch(addNote())
-                }
+            dispatch({
+                type: FETCH_NOTE_LIST,
+                notes: resp.data
+            })
+            //选中一条笔记
+            if (resp.data.length > 0) {
+                dispatch(changeNote(resp.data[0].id))
+            } else {
+                //如果笔记本为空，则新建一条笔记
+                dispatch(addNote())
             }
         })
     }
@@ -145,21 +144,19 @@ export const addNotebook = name => {
         } else {
             //关闭对话框
             dispatch(closeAddTag())
-            axios.post('/notebook/add', {
+            axios.put('/api/notebook', {
                 name: name
             }, {
                 headers: {
                     Token: localStorage.getItem('token')
                 }
             }).then(resp => {
-                if (resp.data.code === 200) {
-                    //发起一个添加笔记本的action
-                    dispatch({
-                        type: ADD_NOTEBOOK,
-                        name,
-                        notebookId: resp.data.notebook.id
-                    })
-                }
+                //发起一个添加笔记本的action
+                dispatch({
+                    type: ADD_NOTEBOOK,
+                    name,
+                    notebookId: resp.data.data
+                })
             })
         }
     }

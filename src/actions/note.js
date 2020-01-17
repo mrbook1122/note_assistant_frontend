@@ -11,16 +11,16 @@ export const addNote = () => {
         })
         let notebook = getState().notebooks.find(notebook => notebook.select)
         //新建一条笔记
-        axios.post('/note/add', {
+        axios.put('/api/note', {
             title: '',
-            notebookID: notebook.notebookId
+            notebookId: notebook.notebookId
         }, {
             headers: {
                 Token: localStorage.getItem('token')
             }
         }).then(resp => {
             if (resp.data.code === 200)
-                dispatch(updateNoteTitle('', resp.data.note.id))
+                dispatch(updateNoteTitle('', resp.data.data))
         })
     }
 }

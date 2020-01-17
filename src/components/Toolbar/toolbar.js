@@ -60,16 +60,14 @@ const ToolBar = props => {
         let id = setTimeout(() => {
             if (props.note.status === 1) {
                 //更新标题
-                axios.post('/note/update/title', {
-                    title,
-                    id: props.note.noteId
+                axios.post('/api/note/' + props.note.noteId + '/title', {
+                    title
                 }, {
                     headers: {
                         Token: localStorage.getItem('token')
                     }
                 }).then(resp => {
-                    if (resp.data.code === 200)
-                        props.dispatch(updateNoteTitle(title))
+                    props.dispatch(updateNoteTitle(title))
                 })
             }
         }, 1500)
@@ -108,7 +106,7 @@ const ToolBar = props => {
 const mapStateToProps = state => {
     let notebook = state.notebooks.find(notebook => notebook.select)
     if (notebook === undefined)
-    //返回id:-1表示未选择笔记本
+        //返回id:-1表示未选择笔记本
         return {note: {noteId: -1}}
     let note = notebook.notes.find(note => note.select)
     return {note}
