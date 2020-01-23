@@ -3,6 +3,7 @@ import styled from "styled-components";
 import {connect} from 'react-redux'
 
 import Note from "./Note";
+import Skeleton from "./Skeleton";
 import {fetchNotes} from "../../actions";
 
 const Container = styled.div`
@@ -26,15 +27,20 @@ const Container = styled.div`
 
 const NoteList = props => {
     useEffect(() => {
-        //判断笔记本的笔记列表是否已经初始化
+        // 判断笔记本的笔记列表是否已经初始化
         if (props.notebook && props.notebook.status === 0) {
             props.dispatch(fetchNotes())
         }
     }, [props.notebook])
 
-    //如果未有选中的笔记本，则返回null
-    if (props.notebook === undefined)
+    // 没有选中的笔记本
+    if (props.notebook === undefined) {
         return <Container/>
+    }
+    // 笔记列表未初始化，展示骨架屏
+    if (props.notebook.status === 0) {
+        return <Skeleton/>
+    }
     return (
         <Container>
             {props.notebook.notes.map((note, index) => <Note key={index} note={note}/>)}
