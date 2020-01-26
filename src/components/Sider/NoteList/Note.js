@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import {connect} from 'react-redux'
 
-import {changeNote} from "../../actions";
+import {changeNote} from "../../../actions";
 
 const Container = styled.button`
     width: 100%;
@@ -48,12 +48,9 @@ function Note(props) {
     const contextMenu = e => {
         e.preventDefault()
         selectNote()
-        let menu = document.getElementById('note-menu')
-        if (menu) {
-            menu.style.visibility = 'visible'
-            menu.style.left = e.clientX + 'px'
-            menu.style.top = e.clientY - 50 + 'px'
-        }
+        // menu.style.visibility = 'visible'
+        // menu.style.left = e.clientX + 'px'
+        // menu.style.top = e.clientY - 50 + 'px'
     }
     //选中笔记本
     const selectNote = () => {

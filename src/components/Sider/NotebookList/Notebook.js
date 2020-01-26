@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import {connect} from 'react-redux'
 
-import {changeNotebook} from "../../actions";
+import {changeNotebook} from "../../../actions";
 
 const Container = styled.button`
     width: 100%;
@@ -47,12 +47,10 @@ function Notebook(props) {
     const contextMenu = e => {
         e.preventDefault()
         props.dispatch(changeNotebook(props.id))
-        let menu = document.getElementById('menu')
-        if (menu) {
-            menu.style.visibility = 'visible'
-            menu.style.left = e.clientX + 'px'
-            menu.style.top = e.clientY - 50 + 'px'
-        }
+        let menu = props.menu.current
+        menu.style.visibility = 'visible'
+        menu.style.left = e.clientX + 'px'
+        menu.style.top = e.clientY - 50 + 'px'
     }
     //选中笔记本
     const selectNotebook = () => {

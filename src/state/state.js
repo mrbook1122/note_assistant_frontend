@@ -16,7 +16,9 @@ let state = {
             /**
              * 是否选中
              */
-            select: false
+            select: false,
+            // 是否为重命名状态
+            rename: false
         }
     ],
     //是否展示添加标签的对话框

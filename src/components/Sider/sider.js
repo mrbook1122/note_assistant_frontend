@@ -6,7 +6,6 @@ import NoteList from "./NoteList";
 import NotebookList from "./NotebookList";
 import Button from "./button";
 import Top from "./Top";
-// import NotebookList from "./notebooklist";
 
 //侧边栏进场动画
 const slideInLeft = keyframes`
