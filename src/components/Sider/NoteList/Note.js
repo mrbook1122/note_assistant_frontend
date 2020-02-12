@@ -10,7 +10,7 @@ const Container = styled.button`
     display: flex;
     align-items: center;
     border: none;
-    
+    height: 45px;
     :focus {
         outline: none;
     }
@@ -52,10 +52,12 @@ function Note(props) {
         // menu.style.left = e.clientX + 'px'
         // menu.style.top = e.clientY - 50 + 'px'
     }
+
     //选中笔记本
     const selectNote = () => {
         props.dispatch(changeNote(props.note.noteId))
     }
+
     //如果标题不存在或者为空白字符，则设置标题为‘无标题页’
     let title;
     if (props.note.title === undefined || props.note.title.trim() === '')

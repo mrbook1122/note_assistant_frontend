@@ -2,6 +2,7 @@
 import axios from 'axios'
 
 import {addNote} from "./note";
+export * from './actions'
 
 export const ADD_NOTEBOOK = 'ADD_NOTEBOOK'
 
@@ -42,16 +43,18 @@ export const updateNoteList = (notes, id) => ({
 
 //更改选择的笔记本
 export const CHANGE_NOTEBOOK = 'CHANGE_NOTEBOOK'
-export const changeNotebook = notebookId => ({
-    type: CHANGE_NOTEBOOK,
-    notebookId
-})
+export const changeNotebook = notebookId => {
+    return (dispatch) => {
+        dispatch({
+            type: CHANGE_NOTEBOOK,
+            notebookId
+        })
+        dispatch(fetchNotes())
+    }
+}
 
 //笔记本已存在
 export const NOTEBOOK_IS_EXISTS = 'NOTEBOOK_IS_EXISTS'
-
-//初始化笔记本列表
-export const INIT_NOTEBOOK_LIST = 'INIT_NOTEBOOK_LIST'
 
 //展示添加标签对话框
 export const SHOW_ADD_TAG = 'SHOW_ADD_TAG'
@@ -63,7 +66,8 @@ export const closeAddTag = () => ({
     type: CLOSE_ADD_TAG
 })
 
-//获取笔记本列表
+//初始化笔记本列表
+export const INIT_NOTEBOOK_LIST = 'INIT_NOTEBOOK_LIST'
 export const fetchNotebooks = () => {
     return function (dispatch) {
         axios.get('/api/notebook/list', {
@@ -78,14 +82,15 @@ export const fetchNotebooks = () => {
                 notes: [],
                 select: false
             }))
+            //选中一个笔记本
+            if (notebooks.length > 0) {
+                notebooks[0].select = true
+            }
             dispatch({
                 type: INIT_NOTEBOOK_LIST,
                 notebooks
             })
-            //选中一个笔记本
-            if (notebooks.length > 0) {
-                dispatch(changeNotebook(notebooks[0].notebookId))
-            }
+            dispatch(fetchNotes())
         })
     }
 }
@@ -103,24 +108,37 @@ export const changeNote = noteId => ({
 export const FETCH_NOTE_LIST = 'FETCH_NOTE_LIST'
 export const fetchNotes = () => {
     return function (dispatch, getState) {
-        //当前的笔记本
+        /**
+         * 先获取当前的笔记本，如果未选中笔记本或者笔记本的笔记列表已经获取，则退出函数
+         * 1. 先获取笔记列表
+         * 2. 选择笔记列表中的第一条笔记
+         */
         let notebook = getState().notebooks.find(notebook => notebook.select)
+        if (notebook === undefined)
+            return;
+        if (notebook.status === 1)
+            return;
         axios.get('/api/notebook/' + notebook.notebookId + '/note/list', {
             headers: {
                 Token: localStorage.getItem('token')
             }
         }).then(resp => {
+            let notes = resp.data.map(note => ({
+                noteId: note.id,
+                title: note.title,
+                status: 1,
+                select: false
+            }))
+            if (notes.length > 0) {
+                notes[0].select = true
+            }
+            notebook.notes = notes
+            notebook.status = 1
+            let notebooks = getState().notebooks.map(n => ({...n}))
             dispatch({
                 type: FETCH_NOTE_LIST,
-                notes: resp.data
+                notebooks
             })
-            //选中一条笔记
-            if (resp.data.length > 0) {
-                dispatch(changeNote(resp.data[0].id))
-            } else {
-                //如果笔记本为空，则新建一条笔记
-                dispatch(addNote())
-            }
         })
     }
 }

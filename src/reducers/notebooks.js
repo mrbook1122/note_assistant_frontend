@@ -1,4 +1,14 @@
-import {INIT_NOTEBOOK_LIST, ADD_NOTEBOOK, UPDATE_NOTE_LIST, ADD_NOTE, DELETE_NOTEBOOK, CHANGE_NOTEBOOK, FETCH_NOTE_LIST, CHANGE_NOTE} from "../actions";
+import {
+    INIT_NOTEBOOK_LIST,
+    ADD_NOTEBOOK,
+    UPDATE_NOTE_LIST,
+    ADD_NOTE,
+    DELETE_NOTEBOOK,
+    CHANGE_NOTEBOOK,
+    FETCH_NOTE_LIST,
+    CHANGE_NOTE,
+    CHANGE_NOTEBOOK_NAME
+} from "../actions";
 import {UPDATE_NOTE_TITLE} from "../actions/note";
 
 const notebooks = (state = [], action) => {
@@ -44,18 +54,9 @@ const notebooks = (state = [], action) => {
                 return {...notebook, select: false}
             })
         case FETCH_NOTE_LIST:
-            return state.map(notebook => {
-                if (notebook.select) {
-                    let notes = action.notes.map(note => ({
-                        noteId: note.id,
-                        title: note.title,
-                        status: 1,
-                        select: false
-                    }))
-                    return {...notebook, status: 1, notes}
-                }
-                return notebook
-            })
+            return action.notebooks
+        case CHANGE_NOTEBOOK_NAME:
+            return action.notebooks
         default:
             return state
     }

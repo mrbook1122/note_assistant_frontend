@@ -17,10 +17,10 @@ let state = {
              * 是否选中
              */
             select: false,
-            // 是否为重命名状态
-            rename: false
         }
     ],
+    // 是否为重命名状态
+    rename: false,
     //是否展示添加标签的对话框
     showAddTag: false,
     //添加一个笔记本时的状态：添加成功、笔记本已存在

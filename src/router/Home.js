@@ -7,9 +7,9 @@ import thunkMiddleware from 'redux-thunk'
 import {createHashHistory} from 'history'
 
 import GlobalStyle from "../components/globalStyle";
-import ToolBar from "../components/Toolbar/toolbar";
+import ToolBar from "../components/Toolbar";
 import Editor from "../components/Editor/index";
-import Sider from "../components/Sider/sider";
+import Sider from "../components/Sider";
 import VideoSider from "../components/VideoSider";
 import AddNotebookDialog from "../components/Sider/AddNotebookDialog";
 import reducer from "../reducers";

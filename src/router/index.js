@@ -11,7 +11,7 @@ import {createHashHistory} from 'history'
 import GlobalStyle from "../components/globalStyle";
 import ToolBar from "../components/Toolbar/toolbar";
 import Editor from "../components/Editor/index";
-import Sider from "../components/Sider/sider";
+import Index from "../components/Sider/sider";
 import VideoSider from "../components/VideoSider";
 import AddTag from "../components/Sider/AddNotebookDialog";
 import Home from "./Home";

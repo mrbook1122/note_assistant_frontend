@@ -70,7 +70,7 @@ const Editor = props => {
     }, [props.note])
 
     //如果当前未选中笔记本
-    if (props.note && props.note.noteId === -1)
+    if (props.note === undefined)
         return null
 
     return (
@@ -85,8 +85,7 @@ const Editor = props => {
 const mapStateToProps = state => {
     let notebook = state.notebooks.find(notebook => notebook.select)
     if (notebook === undefined)
-        //返回id:-1表示未选择笔记本
-        return {note: {noteId: -1}}
+        return {note: undefined}
     let note = notebook.notes.find(note => note.select)
     return {note}
 }

@@ -9,7 +9,7 @@ import {Spin} from "antd";
 import GlobalStyle from "./components/globalStyle";
 import ToolBar from "./components/Toolbar/toolbar";
 import Editor from "./components/Editor/index";
-import Sider from "./components/Sider/sider";
+import Index from "./components/Sider/sider";
 import Login from './components/Login'
 import RegisterComponent from "./components/Register";
 import VideoSider from "./components/VideoSider";
@@ -65,7 +65,7 @@ const App = () => {
                 <ToolBar changeVideoId={changeVideoId}/>
                 <Editor/>
             </Container>
-            <Sider/>
+            <Index/>
             <VideoSider id={videoId}/>
         </>
     )

@@ -32,7 +32,6 @@ const VideoSider = props => {
         let request = indexedDB.open('db', 1)
         request.onupgradeneeded = ev => {
             let db = ev.target.result;
-            console.log('initialize success')
             let objectStore = db.createObjectStore('videos', {keyPath: 'id', autoIncrement: true});
             objectStore.createIndex('webm', '', {unique: false});
         }

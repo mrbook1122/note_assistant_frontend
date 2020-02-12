@@ -45,6 +45,15 @@ NoteContextMenu = React.forwardRef(NoteContextMenu)
 
 //笔记本上单击右键展示的右键菜单
 let NotebookContextMenu = (props, ref) => {
+
+    // 重命名
+    const rename = () => {
+        props.dispatch({
+            type: 'RENAME',
+            rename: true
+        })
+    }
+
     return (
         <MenuContainer ref={ref}>
             <MenuItemContainer
@@ -62,6 +71,7 @@ let NotebookContextMenu = (props, ref) => {
                 </div>
             </MenuItemContainer>
             <MenuItemContainer
+                onClick={rename}
                 style={{padding: '3px 18px', display: 'flex', borderBottom: '1px solid rgba(0, 0, 0, 0.05)'}}>
                 <div style={{marginTop: '2px', marginRight: '9px'}}>
                     <svg viewBox="0 0 1024 1024" width="18" height="18">
