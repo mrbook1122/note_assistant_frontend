@@ -5,11 +5,13 @@ import {connect} from 'react-redux'
 import axios from 'axios'
 
 import {updateNoteTitle} from "../../actions/note";
+import {SiderButton} from "./SiderButton";
 
 const ToolBarContainer = styled.div`
     //height: 100px;
     padding: 10px 10px;
-    //display: flex;
+    display: flex;
+    align-items: center;
     //border: 1px solid black;
     font-size: 1.3rem;
 `
@@ -81,6 +83,7 @@ const ToolBar = props => {
     return (
         <>
             <ToolBarContainer>
+                <SiderButton/>
                 {/*<Avatar icon={'user'}/>*/}
                 {/*<Button type={"primary"} onClick={props.changeVideoId}*/}
                 {/*        style={{marginRight: '10px'}}*/}

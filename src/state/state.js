@@ -19,11 +19,15 @@ let state = {
             select: false,
         }
     ],
-    // 是否为重命名状态
-    rename: false,
-    //是否展示添加标签的对话框
-    showAddTag: false,
-    //添加一个笔记本时的状态：添加成功、笔记本已存在
+    // 系统的状态
+    status: {
+        // 侧边栏显示或隐藏
+        sider: 'open', // or 'close'
+        // 当前是否是重命名状态，如果是，则选中的笔记本展示为一个文本框
+        rename: false,
+        // 新建笔记本的对话框显示或隐藏
+        addNotebookDialog: 'close', // or 'open'
+    },
     addNotebookResult: {
         resultCode: 200//结果码，200成功，400失败, 0不显示
     }

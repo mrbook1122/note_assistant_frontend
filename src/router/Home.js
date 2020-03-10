@@ -19,12 +19,7 @@ const Container = styled.div`
     position: relative;
 `
 
-let state = {
-    notebooks: [],
-    //是否展示添加标签的对话框
-    showAddTag: false
-}
-let store = createStore(reducer, state, applyMiddleware(thunkMiddleware));
+let store = createStore(reducer, {}, applyMiddleware(thunkMiddleware));
 
 //history对象
 const history = createHashHistory()

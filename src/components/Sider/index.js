@@ -4,7 +4,7 @@ import styled, {keyframes} from "styled-components";
 import Right from '../../icons/next.png'
 import NoteList from "./NoteList";
 import NotebookList from "./NotebookList";
-import Button from "./button";
+import {BottomButton} from "./BottomButton";
 import Top from "./Top";
 
 //侧边栏进场动画
@@ -139,7 +139,7 @@ const Sider = () => {
                 </div>
                 {/*<NotebookList visible={notebookListVisible}/>*/}
                 {/*添加标签、笔记按钮*/}
-                <Button/>
+                <BottomButton/>
                 <Flag/>
             </SiderContainer>
         </>

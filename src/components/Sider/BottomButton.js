@@ -21,6 +21,7 @@ const ItemContainer = styled.div`
     cursor: pointer;
 `
 
+// 侧边栏底部，添加笔记本和新建笔记的按钮
 const Button = props => {
 
     return (
@@ -57,4 +58,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch
 })
 
-export default connect(null, mapDispatchToProps)(Button)
+let BottomButton = connect(null, mapDispatchToProps)(Button)
+
+export {
+    BottomButton
+}

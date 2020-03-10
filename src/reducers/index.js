@@ -1,15 +1,11 @@
 import {combineReducers} from "redux";
 
-import showAddTag from "./showAddTag";
 import notebooks from "./notebooks";
-import addNotebookResult from "./addNotebookResult";
-import rename from "./rename";
+import {status} from "./status";
 
 const reducer = combineReducers({
-    showAddTag,
+    status,
     notebooks,
-    addNotebookResult,
-    rename
 })
 
 export default reducer

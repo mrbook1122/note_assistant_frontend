@@ -1,7 +1,5 @@
 import axios from 'axios'
 
-import {changeNotebook} from "./index";
-
 //新建一条笔记，state中只保存笔记的id和title
 export const ADD_NOTE = 'ADD_NOTE'
 export const addNote = () => {
@@ -51,6 +49,22 @@ export const updateNoteTitle = (title, noteId) => {
         dispatch({
             type: UPDATE_NOTE_TITLE,
             notebooks
+        })
+    }
+}
+
+//更改当前选择的笔记
+export const CHANGE_NOTE = 'CHANGE_NOTE'
+export const changeNote = noteId => {
+    return (dispatch, getState) => {
+        let notebooks = getState().notebooks
+        let notebook = notebooks.find(n => n.select)
+        let note = notebook.notes.find(n => n.select)
+        if (note.noteId === noteId) return
+
+        dispatch({
+            type: CHANGE_NOTE,
+            noteId
         })
     }
 }

@@ -121,9 +121,7 @@ const AddNotebookDialog = props => {
 }
 
 const mapStateToProps = state => ({
-    show: state.showAddTag,
-    //是否发出笔记本已存在的警告
-    isWarn: state.addNotebookResult.resultCode === 400
+    show: state.status.addNotebookDialog === 'open',
 })
 
 export default connect(mapStateToProps)(AddNotebookDialog)

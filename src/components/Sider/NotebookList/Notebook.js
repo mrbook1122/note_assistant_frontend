@@ -90,7 +90,7 @@ function Notebook(props) {
 }
 
 const mapStateToProps = state => ({
-    rename: state.rename
+    rename: state.status.rename
 })
 
 export default connect(mapStateToProps)(Notebook)

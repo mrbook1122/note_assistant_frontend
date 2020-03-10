@@ -1,0 +1,2 @@
+// 侧边栏状态
+export const CHANGE_SIDER_STATUS = 'CHANGE_SIDER_STATUS'
